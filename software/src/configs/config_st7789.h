@@ -24,7 +24,7 @@
 
 #include "xmc_gpio.h"
 
-#define ST7789_SPI_BAUDRATE         2000000
+#define ST7789_SPI_BAUDRATE         1000000
 #define ST7789_USIC_CHANNEL         USIC1_CH0
 #define ST7789_USIC                 XMC_SPI1_CH0
 

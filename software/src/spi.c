@@ -100,14 +100,21 @@ void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st
 	}
 }
 
-void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave) {
+void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const bool swap_u16) {
 	while(spi.tranceive_ongoing) {
 		coop_task_yield();
 	}
 
 	spi.tranceive_ongoing = true;
 
-	memcpy(spi.data, data, length);
+	if(swap_u16) {
+		for(uint16_t i = 0; i < length; i+=2) {
+			spi.data[i] = data[i+1];
+			spi.data[i+1] = data[i];
+		}
+	} else {
+		memcpy(spi.data, data, length);
+	}
 	spi.data_length = length;
 	spi_data_read = spi.data;
 	spi_data_write = spi.data;
@@ -165,7 +172,7 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 void spi_init(void) {
 	memset(&spi, 0, sizeof(SPI));
 
-	// ST7789 and TSC2046 use same SPI configuration, so we can use the defines from either of them.
+	// ST7789, RAM and Flash use same SPI configuration, so we can use the defines from either of them.
 
 	// USIC channel configuration
 	const XMC_SPI_CH_CONFIG_t channel_config = {

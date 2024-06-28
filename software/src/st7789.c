@@ -24,6 +24,7 @@
 #include "configs/config_st7789.h"
 
 #include "bricklib2/hal/system_timer/system_timer.h"
+#include "bricklib2/utility/util_definitions.h"
 #include "bricklib2/os/coop_task.h"
 #include "spi.h"
 
@@ -43,189 +44,175 @@ void st7789_init_spi(void) {
 	spi_init();
 }
 
-void st7789_task_write_data_byte(const uint8_t data) {
+void st7789_task_write_byte(const uint8_t data) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(&data, 1, XMC_SPI_CH_SLAVE_SELECT_0);
-}
-
-void st7789_task_write_command_byte(const uint8_t command) {
-	XMC_GPIO_SetOutputLow(ST7789_CD_PIN);
-	spi_task_transceive(&command, 1, XMC_SPI_CH_SLAVE_SELECT_0);
+	spi_task_transceive(&data, 1, XMC_SPI_CH_SLAVE_SELECT_0, false);
 }
 
 void st7789_task_write_data(const uint8_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(data, length, XMC_SPI_CH_SLAVE_SELECT_0);
+	spi_task_transceive(data, length, XMC_SPI_CH_SLAVE_SELECT_0, false);
 }
 
-void st7789_task_write_command(const uint8_t *command, const uint32_t length) {
+void st7789_task_write_display(const uint16_t *data, const uint32_t length) {
+	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
+	spi_task_transceive((uint8_t*)data, length*sizeof(uint16_t), XMC_SPI_CH_SLAVE_SELECT_0, true);
+}
+
+void st7789_task_write_command(const uint8_t command) {
 	XMC_GPIO_SetOutputLow(ST7789_CD_PIN);
-	spi_task_transceive(command, length, XMC_SPI_CH_SLAVE_SELECT_0);
+	spi_task_transceive(&command, 1, XMC_SPI_CH_SLAVE_SELECT_0, false);
 }
 
-
-void st7789_set_reset(const bool reset) {
-	if(reset) {
-		XMC_GPIO_SetOutputLow(ST7789_RESET_PIN);
-	} else {
-		XMC_GPIO_SetOutputHigh(ST7789_RESET_PIN);
-	}
+void st7789_task_write_command_byte(const uint8_t command, const uint8_t command_data) {
+	st7789_task_write_command(command);
+	st7789_task_write_byte(command_data);
 }
 
-#define X_SHIFT 0
-#define Y_SHIFT 0
-#define WHITE       0xFFFF
-#define BLACK       0x0000
-#define BLUE        0x001F
-#define RED         0xF800
-#define MAGENTA     0xF81F
-#define GREEN       0x07E0
-#define CYAN        0x7FFF
-#define YELLOW      0xFFE0
-#define GRAY        0X8430
-#define BRED        0XF81F
-#define GRED        0XFFE0
-#define GBLUE       0X07FF
-#define BROWN       0XBC40
-#define BRRED       0XFC07
-#define DARKBLUE    0X01CF
-#define LIGHTBLUE   0X7D7C
-#define GRAYBLUE    0X5458
-
-#define LIGHTGREEN  0X841F
-#define LGRAY       0XC618
-#define LGRAYBLUE   0XA651
-#define LBBLUE      0X2B12
-
-void st7789_set_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
-{
-	uint16_t x_start = x0 + X_SHIFT, x_end = x1 + X_SHIFT;
-	uint16_t y_start = y0 + Y_SHIFT, y_end = y1 + Y_SHIFT;
-
-	/* Column Address set */
-	st7789_task_write_command_byte(ST778_CMD_CASET);
-	{
-		uint8_t data[] = {x_start >> 8, x_start & 0xFF, x_end >> 8, x_end & 0xFF};
-		st7789_task_write_data(data, sizeof(data));
-	}
-
-	/* Row Address set */
-	st7789_task_write_command_byte(ST778_CMD_RASET);
-	{
-		uint8_t data[] = {y_start >> 8, y_start & 0xFF, y_end >> 8, y_end & 0xFF};
-		st7789_task_write_data(data, sizeof(data));
-	}
-	/* Write to RAM */
-	st7789_task_write_command_byte(ST778_CMD_RAMWR);
+void st7789_task_write_command_data(const uint8_t command, const uint8_t *command_data, const uint32_t length) {
+	st7789_task_write_command(command);
+	st7789_task_write_data(command_data, length);
 }
 
-/* Page Address Order ('0': Top to Bottom, '1': the opposite) */
-#define ST7789_MADCTL_MY  0x80
-/* Column Address Order ('0': Left to Right, '1': the opposite) */
-#define ST7789_MADCTL_MX  0x40
-/* Page/Column Order ('0' = Normal Mode, '1' = Reverse Mode) */
-#define ST7789_MADCTL_MV  0x20
-/* Line Address Order ('0' = LCD Refresh Top to Bottom, '1' = the opposite) */
-#define ST7789_MADCTL_ML  0x10
-/* RGB/BGR Order ('0' = RGB, '1' = BGR) */
-#define ST7789_MADCTL_RGB 0x00
-
-void st7789_set_rotation(uint8_t m)
-{
-	st7789_task_write_command_byte(ST778_CMD_MADCTL);	// MADCTL
-	switch (m) {
-	case 0:
-		st7789_task_write_data_byte(ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB);
-		break;
-	case 1:
-		st7789_task_write_data_byte(ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
-		break;
-	case 2:
-		st7789_task_write_data_byte(ST7789_MADCTL_RGB);
-		break;
-	case 3:
-		st7789_task_write_data_byte(ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
-		break;
-	default:
-		break;
-	}
+void st7789_task_sleep(void) {
+	st7789_task_write_command(ST7789_CMD_DISPOFF); // Display off
+	st7789_task_write_command(ST7789_CMD_SLPIN);   // Enter sleep mode
 }
 
-#define ST7789_COLOR_MODE_16bit 0x55    //  RGB565 (16bit)
-void st7789_task_tick(void) {
-	st7789_set_reset(true);
+void st7789_task_wakeup(void) {
+	st7789_task_write_command(ST7789_CMD_SLPOUT); // Leave sleep mode
+	coop_task_sleep_ms(120);
+	st7789_task_write_command(ST7789_CMD_DISPON); // Display on
+}
+
+void st7789_task_reset(void) {
+	XMC_GPIO_SetOutputLow(ST7789_RESET_PIN);
 	coop_task_sleep_ms(10);
-	st7789_set_reset(false);
-	coop_task_sleep_ms(20);
+	XMC_GPIO_SetOutputHigh(ST7789_RESET_PIN);
+	coop_task_sleep_ms(120);
+}
 
-    st7789_task_write_command_byte(ST778_CMD_COLMOD);		//	Set color mode
-    st7789_task_write_data_byte(ST7789_COLOR_MODE_16bit);
-  	st7789_task_write_command_byte(0xB2);				//	Porch control
-	{
-		uint8_t data[] = {0x0C, 0x0C, 0x00, 0x33, 0x33};
-		st7789_task_write_data(data, sizeof(data));
-	}
-	st7789_set_rotation(2);
-	//ST7789_SetRotation(ST7789_ROTATION);	//	MADCTL (Display Rotation)
+void st7789_set_window(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
+	// Column address
+	st7789_task_write_command_data(ST7789_CMD_CASET, (uint8_t[]){x_start >> 8, x_start & 0xFF, x_end >> 8, x_end & 0xFF}, 4);
 
-	/* Internal LCD Voltage generator settings */
-    st7789_task_write_command_byte(0XB7);				//	Gate Control
-    st7789_task_write_data_byte(0x35);			//	Default value
-    st7789_task_write_command_byte(0xBB);				//	VCOM setting
-    st7789_task_write_data_byte(0x19);			//	0.725v (default 0.75v for 0x20)
-    st7789_task_write_command_byte(0xC0);				//	LCMCTRL
-    st7789_task_write_data_byte (0x2C);			//	Default value
-    st7789_task_write_command_byte (0xC2);				//	VDV and VRH command Enable
-    st7789_task_write_data_byte (0x01);			//	Default value
-    st7789_task_write_command_byte (0xC3);				//	VRH set
-    st7789_task_write_data_byte (0x12);			//	+-4.45v (defalut +-4.1v for 0x0B)
-    st7789_task_write_command_byte (0xC4);				//	VDV set
-    st7789_task_write_data_byte (0x20);			//	Default value
-    st7789_task_write_command_byte (0xC6);				//	Frame rate control in normal mode
-    st7789_task_write_data_byte (0x0F);			//	Default value (60HZ)
-    st7789_task_write_command_byte (0xD0);				//	Power control
-    st7789_task_write_data_byte (0xA4);			//	Default value
-    st7789_task_write_data_byte (0xA1);			//	Default value
-	/**************** Division line ****************/
+	// Row address set
+	st7789_task_write_command_data(ST7789_CMD_RASET, (uint8_t[]){y
 
-	st7789_task_write_command_byte(0xE0);
-	{
-		uint8_t data[] = {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23};
-		st7789_task_write_data(data, sizeof(data));
-	}
+	// Write to RAM
+	st7789_task_write_command(ST7789_CMD_RAMWR);
+}
 
-    st7789_task_write_command_byte(0xE1);
-	{
-		uint8_t data[] = {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23};
-		st7789_task_write_data(data, sizeof(data));
-	}
-    st7789_task_write_command_byte (ST778_CMD_INVON);		//	Inversion ON
-	st7789_task_write_command_byte (ST778_CMD_SLPOUT);	//	Out of sleep mode
-  	st7789_task_write_command_byte (ST778_CMD_NORON);		//	Normal Display on
-  	st7789_task_write_command_byte (ST778_CMD_DISPON);	//	Main screen turned on
+void st7789_task_init(void) {
+	// Colormode to 16bit RGB (565)
+	st7789_task_write_command_byte(ST7789_CMD_COLMOD, 0x55);
 
+	// Screen refresh left to right, top to bottom, color RGB
+	st7789_task_write_command_byte(ST7789_CMD_MADCTL, 0b01100000); // MX=1, MV=1
+
+	// Porch Control
+	st7789_task_write_command_data(ST7789_CMD_PORCTRL, (uint8_t[]){0x0C, 0x0C, 0x00, 0x33, 0x33}, 5);
+
+	// LCD voltage generator settings
+	st7789_task_write_command_byte(ST7789_CMD_GCTRL, 0x44);    // Gate control -> VGL=-9.6V, VGH=12.2V
+	st7789_task_write_command_byte(ST7789_CMD_VCOMS, 0x24);    // VCOM setting-> 1.0V
+	st7789_task_write_command_byte(ST7789_CMD_LCMCTRL, 0x2C);  // LCM control -> XOR RGB setting, XOR MX setting and reverse source output order
+	st7789_task_write_command_byte(ST7789_CMD_VDVVRHEN, 0x01); // VDV and VRH command enable
+	st7789_task_write_command_byte(ST7789_CMD_VRHS, 0x13);     // VRH -> 4.5V
+	st7789_task_write_command_byte(ST7789_CMD_VDVS, 0x20);     // VDV -> 0V
+	st7789_task_write_command_byte(ST7789_CMD_FRCTRL2, 0x0F);  // Frame rate -> 60Hz
+
+	// Power control: AVDD -> 6.8V, AVCL -> -4.8V, VDDS > 2.3V
+	st7789_task_write_command_data(ST7789_CMD_PWCTRL1, (uint8_t[]){0xA4, 0xA1}, 2);
+
+	// Positive and negative voltage gamma control (values from EastRising example)
+	st7789_task_write_command_data(ST7789_CMD_PVGAMCTRL, (uint8_t[]){0xF0, 0x00, 0x04, 0x04, 0x04, 0x05, 0x29, 0x33, 0x3E, 0x38, 0x12, 0x12, 0x28, 0x30}, 14);
+	st7789_task_write_command_data(ST7789_CMD_NVGAMCTRL, (uint8_t[]){0xF0, 0x07, 0x0A, 0x0D, 0x0B, 0x07, 0x28, 0x33, 0x3E, 0x36, 0x14, 0x14, 0x29, 0x32}, 14);
+
+	// Show display
+	st7789_task_write_command(ST7789_CMD_INVON);  // Display inversion
+	st7789_task_write_command(ST7789_CMD_SLPOUT); // Leave sleep mode
+	coop_task_sleep_ms(120);
+	st7789_task_write_command(ST7789_CMD_DISPON); // Display on
 	coop_task_sleep_ms(50);
-	//ST7789_Fill_Color(BLACK);				//	Fill with Black.
+}
 
-	uint16_t data[320];
+void fill_u16(uint16_t color, uint16_t *data, uint16_t length) {
+	for(uint16_t i = 0; i < length; i++) {
+		data[i] = color;
+	}
+}
+
+void st7789_task_draw_filled_rect(uint16_t color, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
+	uint16_t data[100];
+	fill_u16(color, data, 100);
+	st7789_set_window(x_start, y_start, x_end, y_end);
+
+	uint16_t length = (x_end - x_start + 1)*(y_end-y_start+1);
+	while(length > 0) {
+		uint16_t length_write = MIN(100, length);
+		st7789_task_write_display(data, length_write);
+		length -= length_write;
+	}
+}
+
+void st7789_task_draw_image(uint16_t *image, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
+	st7789_set_window(x_start, y_start, x_end, y_end);
+
+	uint16_t length = (x_end - x_start + 1)*(y_end-y_start+1);
+	while(length > 0) {
+		uint16_t length_write = MIN(100, length);
+		st7789_task_write_display(image, length_write);
+		image+=length_write;
+		length -= length_write;
+	}
+}
+
+#define CIRCLE_SIZE 24
+uint16_t circle[CIRCLE_SIZE*CIRCLE_SIZE];
+void st7789_draw_circle(uint16_t *data, uint16_t length) {
+	for(int row = 0; row < length; row++) {
+		for(int col = 0; col < length; col++) {
+			int x = col - length/2;
+			int y = length/2 - row;
+			int sumsq = x*x + y*y;
+
+			if((sumsq > 95) && (sumsq < 105)) {
+				data[col*length + row] = ST7789_COLOR_WHITE;
+			}
+		}
+	}
+}
+
+void st7789_task_tick(void) {
+	st7789_task_reset();
+	st7789_task_init();
+
+	fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);
+	st7789_draw_circle(circle, CIRCLE_SIZE);
+
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 0, 319, 150);
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 151, 319, 239);
+	uint16_t y = 1;
+	uint16_t x = 0;
+	int16_t dir = 1;
 	while(true) {
-		for(uint16_t i = 0; i < 320; i++) {
-			data[i] = RED;
+		for(x = 0; x < 320-CIRCLE_SIZE; x++) {
+			if((y >= 240-CIRCLE_SIZE) || (y <= 0)){
+				dir = -dir;
+			}
+			y += dir;
+			st7789_task_draw_image(circle, x, y, x+CIRCLE_SIZE-1, y+CIRCLE_SIZE-1);
+			coop_task_yield();
 		}
-		for(uint8_t i = 0; i < 240; i++) {
-			st7789_set_window(i, 0, i, 320);
-			st7789_task_write_data((uint8_t*)data, sizeof(data));
+		for(x = 320-CIRCLE_SIZE-1; x > 0; x--) {
+			if((y >= 240-CIRCLE_SIZE) || (y <= 0)){
+				dir = -dir;
+			}
+			y += dir;
+			st7789_task_draw_image(circle, x, y, x+CIRCLE_SIZE-1, y+CIRCLE_SIZE-1);
+			coop_task_yield();
 		}
-		coop_task_sleep_ms(250);
-		for(uint16_t i = 0; i < 320; i++) {
-			data[i] = GREEN;
-		}
-		for(uint8_t i = 0; i < 240; i++) {
-			st7789_set_window(i, 0, i, 320);
-			st7789_task_write_data((uint8_t*)data, sizeof(data));
-		}
-		coop_task_sleep_ms(250);
-		coop_task_yield();
 	}
 }
 
