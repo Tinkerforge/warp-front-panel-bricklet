@@ -5468,7 +5468,7 @@
 		)
 	)
 	(global_label "DIS-AO"
-		(shape input)
+		(shape output)
 		(at 31.75 107.95 180)
 		(fields_autoplaced yes)
 		(effects
@@ -5644,7 +5644,7 @@
 		)
 	)
 	(global_label "DIS-RESET"
-		(shape input)
+		(shape output)
 		(at 124.46 92.71 180)
 		(fields_autoplaced yes)
 		(effects
@@ -6084,7 +6084,7 @@
 		)
 	)
 	(global_label "M-CS-RAM"
-		(shape input)
+		(shape output)
 		(at 111.76 123.19 180)
 		(fields_autoplaced yes)
 		(effects
