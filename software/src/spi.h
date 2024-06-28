@@ -1,8 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * config_custom_bootstrapper.h: XMC bootstrapper configurations for
- *                               WARP Front Panel Bricklet
+ * spi.h: SPI functions shared between ST7789 and Flash/PSRAM
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,22 +19,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef CONFIG_CUSTOM_BOOTSTRAPPER_H
-#define CONFIG_CUSTOM_BOOTSTRAPPER_H
+#ifndef SPI_H
+#define SPI_H
 
-#define BOOTSTRAPPER_STATUS_LED_PIN P0_7
-#define BOOTSTRAPPER_USIC_CHANNEL   USIC0_CH0
-#define BOOTSTRAPPER_PAGE_SIZE      256
-#define BOOTSTRAPPER_FLASH_START    0x10001000
+#include <stdint.h>
+#include <stdbool.h>
 
-#define BOOTSTRAPPER_USIC           XMC_UART0_CH0
-#define BOOTSTRAPPER_RX_PIN         P0_14
-#define BOOTSTRAPPER_RX_INPUT       XMC_USIC_CH_INPUT_DX0
-#define BOOTSTRAPPER_RX_SOURCE      0b000 // DX0A
+#include "xmc_spi.h"
 
-#define BOOTSTRAPPER_TX_PIN         P0_15
-#define BOOTSTRAPPER_TX_PIN_AF      (XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT6 | P0_15_AF_U0C0_DOUT0)
+#define SPI_BUFFER_SIZE 2048
 
-#define BOOTSTRAPPER_BMI_WITH_CAN   0
+typedef struct {
+	uint8_t data[SPI_BUFFER_SIZE];
+	uint16_t data_length;
+
+	bool tranceive_ongoing;
+} SPI;
+
+extern SPI spi;
+
+void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave);
+void spi_init(void);
 
 #endif

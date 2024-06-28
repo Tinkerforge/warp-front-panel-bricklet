@@ -39,9 +39,9 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 
 
 void communication_tick(void) {
-	communication_callback_tick();
+	//communication_callback_tick();
 }
 
 void communication_init(void) {
-	communication_callback_init();
+	//communication_callback_init();
 }

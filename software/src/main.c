@@ -29,14 +29,18 @@
 #include "bricklib2/logging/logging.h"
 #include "communication.h"
 
+#include "st7789.h"
+
 int main(void) {
 	logging_init();
 	logd("Start WARP Front Panel Bricklet\n\r");
 
 	communication_init();
+	st7789_init();
 
 	while(true) {
 		bootloader_tick();
 		communication_tick();
+		st7789_tick();
 	}
 }
