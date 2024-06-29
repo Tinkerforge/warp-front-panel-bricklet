@@ -40,6 +40,7 @@
 #define ST7789_MISO_PIN             P4_4
 #define ST7789_MISO_INPUT           XMC_USIC_CH_INPUT_DX0
 #define ST7789_MISO_SOURCE          0b010 // DX0C
+#define ST7789_MISO2_PIN            P0_3
 
 #define ST7789_SERVICE_REQUEST_RX   2
 #define ST7789_SERVICE_REQUEST_TX   3
