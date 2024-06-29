@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * main.c: Initialization for WARP Front Panel Bricklet
+ * button.c: Driver for button with LED
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,37 +19,28 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
-#include <stdbool.h>
-
-#include "configs/config.h"
-
-#include "bricklib2/bootloader/bootloader.h"
-#include "bricklib2/hal/system_timer/system_timer.h"
-#include "bricklib2/logging/logging.h"
-#include "communication.h"
-
-#include "st7789.h"
-#include "by25q.h"
 #include "button.h"
-#include "psram.h"
 
-int main(void) {
-	logging_init();
-	logd("Start WARP Front Panel Bricklet\n\r");
+#include "configs/config_button.h"
 
-	communication_init();
-	st7789_init();
-	by25q_init();
-	button_init();
-	psram_init();
+#include <string.h>
+#include "xmc_gpio.h"
 
-	while(true) {
-		bootloader_tick();
-		communication_tick();
-		st7789_tick();
-		by25q_tick();
-		button_tick();
-		psram_tick();
-	}
+Button button;
+
+void button_init(void) {
+	memset(&button, 0, sizeof(Button));
+
+	const XMC_GPIO_CONFIG_t input_pin_config = {
+		.mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
+		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
+	};
+
+	XMC_GPIO_Init(BUTTON_SWITCH_PIN, &input_pin_config);
+	XMC_GPIO_Init(BUTTON_LED1_PIN,   &input_pin_config);
+	XMC_GPIO_Init(BUTTON_LED2_PIN,   &input_pin_config);
+}
+
+void button_tick(void) {
+
 }

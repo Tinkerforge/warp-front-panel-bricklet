@@ -31,6 +31,9 @@ SET(SOURCES
 	"${PROJECT_SOURCE_DIR}/src/communication.c"
 	"${PROJECT_SOURCE_DIR}/src/spi.c"
 	"${PROJECT_SOURCE_DIR}/src/st7789.c"
+	"${PROJECT_SOURCE_DIR}/src/by25q.c"
+	"${PROJECT_SOURCE_DIR}/src/button.c"
+	"${PROJECT_SOURCE_DIR}/src/psram.c"
 
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/hal/uartbb/uartbb.c"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/hal/system_timer/system_timer.c"
