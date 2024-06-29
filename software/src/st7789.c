@@ -148,7 +148,7 @@ void st7789_task_draw_filled_rect(uint16_t color, uint16_t x_start, uint16_t y_s
 	fill_u16(color, data, 100);
 	st7789_set_window(x_start, y_start, x_end, y_end);
 
-	uint16_t length = (x_end - x_start + 1)*(y_end-y_start+1);
+	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
 	while(length > 0) {
 		uint16_t length_write = MIN(100, length);
 		st7789_task_write_display(data, length_write);
