@@ -46,22 +46,22 @@ void st7789_init_spi(void) {
 
 void st7789_task_write_byte(const uint8_t data) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(&data, 1, XMC_SPI_CH_SLAVE_SELECT_0, false);
+	spi_task_transceive(&data, 1, ST7789_SLAVE, false);
 }
 
 void st7789_task_write_data(const uint8_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(data, length, XMC_SPI_CH_SLAVE_SELECT_0, false);
+	spi_task_transceive(data, length, ST7789_SLAVE, false);
 }
 
 void st7789_task_write_display(const uint16_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive((uint8_t*)data, length*sizeof(uint16_t), XMC_SPI_CH_SLAVE_SELECT_0, true);
+	spi_task_transceive((uint8_t*)data, length*sizeof(uint16_t), ST7789_SLAVE, true);
 }
 
 void st7789_task_write_command(const uint8_t command) {
 	XMC_GPIO_SetOutputLow(ST7789_CD_PIN);
-	spi_task_transceive(&command, 1, XMC_SPI_CH_SLAVE_SELECT_0, false);
+	spi_task_transceive(&command, 1, ST7789_SLAVE, false);
 }
 
 void st7789_task_write_command_byte(const uint8_t command, const uint8_t command_data) {
