@@ -230,6 +230,12 @@ void st7789_init(void) {
 		.output_level     = XMC_GPIO_OUTPUT_LEVEL_LOW
 	};
 
+	const XMC_GPIO_CONFIG_t input_pin_config = {
+		.mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
+		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
+	};
+
+	XMC_GPIO_Init(ST7789_MISO2_PIN, &input_pin_config); // unused
 	XMC_GPIO_Init(ST7789_RESET_PIN, &pin_config_output_high);
 	XMC_GPIO_Init(ST7789_CD_PIN, &pin_config_output_high);
 	XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_high);
