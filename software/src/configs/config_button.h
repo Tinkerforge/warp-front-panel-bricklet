@@ -1,0 +1,31 @@
+/* warp-front-panel-bricklet
+ * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
+ *
+ * config_button.h: Configuration for button with LED
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef CONFIG_BUTTON_H
+#define CONFIG_BUTTON_H
+
+#include "xmc_gpio.h"
+
+#define BUTTON_SWITCH_PIN  P1_4
+#define BUTTON_LED1_PIN    P1_5
+#define BUTTON_LED2_PIN    P1_6
+
+#endif
