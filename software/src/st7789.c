@@ -191,8 +191,7 @@ void st7789_task_tick(void) {
 	fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);
 	st7789_draw_circle(circle, CIRCLE_SIZE);
 
-	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 0, 319, 150);
-	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 151, 319, 239);
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 0, 319, 239);
 	uint16_t y = 1;
 	uint16_t x = 0;
 	int16_t dir = 1;
@@ -213,6 +212,8 @@ void st7789_task_tick(void) {
 			st7789_task_draw_image(circle, x, y, x+CIRCLE_SIZE-1, y+CIRCLE_SIZE-1);
 			coop_task_yield();
 		}
+		uint16_t col = (y>>5)*77;
+		st7789_task_draw_filled_rect(col, 0, 0, 319, 239);
 	}
 }
 
