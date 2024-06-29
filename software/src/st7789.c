@@ -97,7 +97,7 @@ void st7789_set_window(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint1
 	st7789_task_write_command_data(ST7789_CMD_CASET, (uint8_t[]){x_start >> 8, x_start & 0xFF, x_end >> 8, x_end & 0xFF}, 4);
 
 	// Row address set
-	st7789_task_write_command_data(ST7789_CMD_RASET, (uint8_t[]){y
+	st7789_task_write_command_data(ST7789_CMD_RASET, (uint8_t[]){y_start >> 8, y_start & 0xFF, y_end >> 8, y_end & 0xFF}, 4);
 
 	// Write to RAM
 	st7789_task_write_command(ST7789_CMD_RAMWR);
