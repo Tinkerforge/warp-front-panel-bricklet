@@ -104,6 +104,8 @@ void st7789_set_window(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint1
 }
 
 void st7789_task_init(void) {
+	coop_task_sleep_ms(100);
+
 	// Colormode to 16bit RGB (565)
 	st7789_task_write_command_byte(ST7789_CMD_COLMOD, 0x55);
 
