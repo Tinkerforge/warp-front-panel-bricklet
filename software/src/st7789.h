@@ -25,34 +25,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define LCD_MAX_ROWS 8
-#define LCD_MAX_COLUMNS 128
 
 typedef struct {
-	bool initialize;
-	bool reset;
-	bool new_invert;
-	bool new_backlight;
-	bool new_contrast;
-
-	uint8_t display_user[LCD_MAX_ROWS][LCD_MAX_COLUMNS];
-	uint8_t display_user_save[LCD_MAX_ROWS][LCD_MAX_COLUMNS];
-	uint8_t display_gui[LCD_MAX_ROWS][LCD_MAX_COLUMNS];
-
-	uint8_t display_write[LCD_MAX_ROWS][LCD_MAX_COLUMNS];
-	uint8_t display_mask_write[LCD_MAX_ROWS][LCD_MAX_COLUMNS];
-
-	bool display_user_changed;
-	bool display_gui_changed;
-
-	uint8_t display_configuration_contrast;
-	uint8_t display_configuration_backlight;
-	bool display_configuration_invert;
-
-	bool redraw_all;
-	bool automatic_draw;
-
-	uint16_t read_chunk_offset;
 } ST7789;
 
 extern ST7789 st7789;
