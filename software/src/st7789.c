@@ -28,6 +28,8 @@
 #include "bricklib2/os/coop_task.h"
 #include "spi.h"
 
+#include "by25q.h"
+
 CoopTask st7789_task;
 ST7789 st7789;
 
@@ -167,6 +169,22 @@ void st7789_task_draw_image(uint16_t *image, uint16_t x_start, uint16_t y_start,
 		st7789_task_write_display(image, length_write);
 		image+=length_write;
 		length -= length_write;
+	}
+}
+
+void st7789_task_draw_from_by25q(const uint32_t address_start, const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
+	st7789_set_window(x_start, y_start, x_end, y_end);
+
+	// window length for 8bit data
+	uint32_t window_length = (x_end - x_start + 1)*(y_end-y_start+1)*sizeof(uint16_t);
+	uint32_t address = address_start;
+	uint8_t data[BY25Q_PAGE_SIZE] = {0};
+	while(window_length > 0) {
+		uint16_t length = MIN(BY25Q_PAGE_SIZE, window_length);
+		by25q_task_read(data, length, address);
+		st7789_task_write_display((uint16_t*)data, length/sizeof(uint16_t));
+		window_length -= length;
+		address       += length;
 	}
 }
 
