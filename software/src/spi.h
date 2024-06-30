@@ -27,7 +27,11 @@
 
 #include "xmc_spi.h"
 
-#define SPI_BUFFER_SIZE 2048
+#define SPI_BUFFER_SIZE 512
+
+#define SPI_TRANSCEIVE_OPTION_SWAP_U16    1
+#define SPI_TRANSCEIVE_OPTION_NO_DESELECT 2
+#define SPI_TRANSCEIVE_OPTION_NO_SELECT   4
 
 typedef struct {
 	uint8_t data[SPI_BUFFER_SIZE];
@@ -38,7 +42,7 @@ typedef struct {
 
 extern SPI spi;
 
-void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const bool swap_u16);
+void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option);
 void spi_init(void);
 
 #endif

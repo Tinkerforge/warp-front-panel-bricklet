@@ -100,14 +100,16 @@ void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st
 	}
 }
 
-void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const bool swap_u16) {
-	while(spi.tranceive_ongoing) {
-		coop_task_yield();
+void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option) {
+	if(!(option & SPI_TRANSCEIVE_OPTION_NO_SELECT)) {
+		while(spi.tranceive_ongoing) {
+			coop_task_yield();
+		}
 	}
 
 	spi.tranceive_ongoing = true;
 
-	if(swap_u16) {
+	if(option & SPI_TRANSCEIVE_OPTION_SWAP_U16) {
 		for(uint16_t i = 0; i < length; i+=2) {
 			spi.data[i] = data[i+1];
 			spi.data[i+1] = data[i];
@@ -120,8 +122,10 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 	spi_data_write = spi.data;
 	spi_data_write_end = spi.data + length;
 
-	XMC_SPI_CH_ClearStatusFlag(ST7789_USIC, XMC_SPI_CH_STATUS_FLAG_MSLS);
-	XMC_SPI_CH_EnableSlaveSelect(ST7789_USIC, slave);
+	if(!(option & SPI_TRANSCEIVE_OPTION_NO_SELECT)) {
+		XMC_SPI_CH_ClearStatusFlag(ST7789_USIC, XMC_SPI_CH_STATUS_FLAG_MSLS);
+		XMC_SPI_CH_EnableSlaveSelect(ST7789_USIC, slave);
+	}
 
 	// If possible write and read data in this coop task.
 	// Only if other tasks take too much time we go through the interrupts.
@@ -165,8 +169,10 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 		coop_task_yield();
 	}
 
-	XMC_SPI_CH_DisableSlaveSelect(ST7789_USIC);
-	spi.tranceive_ongoing = false;
+	if(!(option & SPI_TRANSCEIVE_OPTION_NO_DESELECT)) {
+		XMC_SPI_CH_DisableSlaveSelect(ST7789_USIC);
+		spi.tranceive_ongoing = false;
+	}
 }
 
 void spi_init(void) {
