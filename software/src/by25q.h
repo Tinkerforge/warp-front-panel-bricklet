@@ -25,15 +25,30 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define BY25Q_INSTRUCTION_SIZE 1
+#define BY25Q_ADDRESS_SIZE 3
+#define BY25Q_PAGE_SIZE 256
+
 typedef struct {
+    uint32_t page_index;
+    uint8_t sub_page_index;
+
+    int32_t to_write_index;
+
+    uint8_t data_write[BY25Q_PAGE_SIZE];
+    uint8_t data_read[BY25Q_PAGE_SIZE];
+
     uint8_t manufacturer_id;
     uint8_t device_id;
+
+    bool rwe_in_progress;
 } BY25Q;
 
 extern BY25Q by25q;
 
 void by25q_init(void);
 void by25q_tick(void);
+void by25q_task_read(uint8_t *data, const uint16_t length, const uint32_t address);
 
 // Configuration and status instructions
 #define BY25Q_OPCODE_WRITE_ENABLE                 0x06

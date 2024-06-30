@@ -23,6 +23,7 @@
 
 #include "bricklib2/utility/communication_callback.h"
 #include "bricklib2/protocols/tfp/tfp.h"
+#include "bricklib2/os/coop_task.h"
 
 #include "st7789.h"
 #include "by25q.h"
@@ -30,47 +31,65 @@
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	const uint8_t length = ((TFPMessageHeader*)message)->length;
 	switch(tfp_get_fid_from_message(message)) {
-		case FID_SET_EEPROM_INDEX:    return length != sizeof(SetEEPROMIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_eeprom_index(message);
-		case FID_GET_EEPROM_INDEX:    return length != sizeof(GetEEPROMIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_eeprom_index(message, response);
-		case FID_SET_EEPROM_DATA:     return length != sizeof(SetEEPROMData)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_eeprom_data(message, response);
-		case FID_GET_EEPROM_DATA:     return length != sizeof(GetEEPROMData)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_eeprom_data(message, response);
-		case FID_ERASE_EEPROM_SECTOR: return length != sizeof(EraseEEPROMSector) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_eeprom_sector(message);
-		case FID_ERASE_EEPROM:        return length != sizeof(EraseEEPROM)       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_eeprom(message);
+		case FID_SET_FLASH_INDEX:    return length != sizeof(SetFlashIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_flash_index(message);
+		case FID_GET_FLASH_INDEX:    return length != sizeof(GetFlashIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_flash_index(message, response);
+		case FID_SET_FLASH_DATA:     return length != sizeof(SetFlashData)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_flash_data(message, response);
+		case FID_ERASE_FLASH_SECTOR: return length != sizeof(EraseFlashSector) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash_sector(message);
+		case FID_ERASE_FLASH:        return length != sizeof(EraseFlash)       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash(message);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
 
 
-BootloaderHandleMessageResponse set_eeprom_index(const SetEEPROMIndex *data) {
+BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data) {
+	if(by25q.sub_page_index > 3) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	by25q.page_index     = data->page_index;
+	by25q.sub_page_index = data->page_index;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
-BootloaderHandleMessageResponse get_eeprom_index(const GetEEPROMIndex *data, GetEEPROMIndex_Response *response) {
-	response->header.length = sizeof(GetEEPROMIndex_Response);
-	response->page_index = by25q.manufacturer_id + 1;
-	response->sub_page_index = by25q.device_id + 2;
-	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
-}
-
-BootloaderHandleMessageResponse set_eeprom_data(const SetEEPROMData *data, SetEEPROMData_Response *response) {
-	response->header.length = sizeof(SetEEPROMData_Response);
+BootloaderHandleMessageResponse get_flash_index(const GetFlashIndex *data, GetFlashIndex_Response *response) {
+	response->header.length  = sizeof(GetFlashIndex_Response);
+	response->page_index     = by25q.page_index;
+	response->sub_page_index = by25q.sub_page_index;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse get_eeprom_data(const GetEEPROMData *data, GetEEPROMData_Response *response) {
-	response->header.length = sizeof(GetEEPROMData_Response);
+BootloaderHandleMessageResponse set_flash_data(const SetFlashData *data, SetFlashData_Response *response) {
+	response->header.length = sizeof(SetFlashData_Response);
+	while(by25q.to_write_index >= 0) {
+		response->next_page_index     = by25q.page_index;
+		response->next_sub_page_index = by25q.sub_page_index;
+		response->status              = WARP_FRONT_PANEL_FLASH_STATUS_BUSY;
+
+		return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+	}
+
+	memcpy(by25q.data_write + by25q.sub_page_index*64, data->data, 64);
+	by25q.sub_page_index++;
+	if(by25q.sub_page_index > 3) {
+		by25q.sub_page_index = 0;
+		by25q.to_write_index = by25q.page_index;
+		by25q.page_index++;
+	}
+	response->next_page_index     = by25q.page_index;
+	response->next_sub_page_index = by25q.sub_page_index;
+	response->status              = WARP_FRONT_PANEL_FLASH_STATUS_OK;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse erase_eeprom_sector(const EraseEEPROMSector *data) {
+BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data) {
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
-BootloaderHandleMessageResponse erase_eeprom(const EraseEEPROM *data) {
+BootloaderHandleMessageResponse erase_flash(const EraseFlash *data) {
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }

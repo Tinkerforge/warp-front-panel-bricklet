@@ -35,6 +35,9 @@ void communication_init(void);
 
 // Constants
 
+#define WARP_FRONT_PANEL_FLASH_STATUS_OK 0
+#define WARP_FRONT_PANEL_FLASH_STATUS_BUSY 1
+
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER 0
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_FIRMWARE 1
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
@@ -54,68 +57,57 @@ void communication_init(void);
 #define WARP_FRONT_PANEL_STATUS_LED_CONFIG_SHOW_STATUS 3
 
 // Function and callback IDs and structs
-#define FID_SET_EEPROM_INDEX 1
-#define FID_GET_EEPROM_INDEX 2
-#define FID_SET_EEPROM_DATA 3
-#define FID_GET_EEPROM_DATA 4
-#define FID_ERASE_EEPROM_SECTOR 5
-#define FID_ERASE_EEPROM 6
+#define FID_SET_FLASH_INDEX 1
+#define FID_GET_FLASH_INDEX 2
+#define FID_SET_FLASH_DATA 3
+#define FID_ERASE_FLASH_SECTOR 4
+#define FID_ERASE_FLASH 5
 
 
 typedef struct {
 	TFPMessageHeader header;
-	uint16_t page_index;
+	uint32_t page_index;
 	uint8_t sub_page_index;
-} __attribute__((__packed__)) SetEEPROMIndex;
+} __attribute__((__packed__)) SetFlashIndex;
 
 typedef struct {
 	TFPMessageHeader header;
-} __attribute__((__packed__)) GetEEPROMIndex;
+} __attribute__((__packed__)) GetFlashIndex;
 
 typedef struct {
 	TFPMessageHeader header;
-	uint16_t page_index;
+	uint32_t page_index;
 	uint8_t sub_page_index;
-} __attribute__((__packed__)) GetEEPROMIndex_Response;
+} __attribute__((__packed__)) GetFlashIndex_Response;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint8_t data[64];
-} __attribute__((__packed__)) SetEEPROMData;
+} __attribute__((__packed__)) SetFlashData;
 
 typedef struct {
 	TFPMessageHeader header;
-	uint16_t next_page_index;
+	uint32_t next_page_index;
 	uint8_t next_sub_page_index;
-} __attribute__((__packed__)) SetEEPROMData_Response;
-
-typedef struct {
-	TFPMessageHeader header;
-} __attribute__((__packed__)) GetEEPROMData;
-
-typedef struct {
-	TFPMessageHeader header;
-	uint8_t data[64];
-} __attribute__((__packed__)) GetEEPROMData_Response;
+	uint8_t status;
+} __attribute__((__packed__)) SetFlashData_Response;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint16_t sector_index;
-	uint8_t sub_page_index;
-} __attribute__((__packed__)) EraseEEPROMSector;
+} __attribute__((__packed__)) EraseFlashSector;
 
 typedef struct {
 	TFPMessageHeader header;
-} __attribute__((__packed__)) EraseEEPROM;
+} __attribute__((__packed__)) EraseFlash;
 
 
 // Function prototypes
-BootloaderHandleMessageResponse set_eeprom_index(const SetEEPROMIndex *data);
-BootloaderHandleMessageResponse get_eeprom_index(const GetEEPROMIndex *data, GetEEPROMIndex_Response *response);
-BootloaderHandleMessageResponse set_eeprom_data(const SetEEPROMData *data, SetEEPROMData_Response *response);
-BootloaderHandleMessageResponse get_eeprom_data(const GetEEPROMData *data, GetEEPROMData_Response *response);
-BootloaderHandleMessageResponse erase_eeprom_sector(const EraseEEPROMSector *data);
-BootloaderHandleMessageResponse erase_eeprom(const EraseEEPROM *data);
+BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
+BootloaderHandleMessageResponse get_flash_index(const GetFlashIndex *data, GetFlashIndex_Response *response);
+BootloaderHandleMessageResponse set_flash_data(const SetFlashData *data, SetFlashData_Response *response);
+BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data);
+BootloaderHandleMessageResponse erase_flash(const EraseFlash *data);
 
 // Callbacks
 
