@@ -207,15 +207,28 @@ void st7789_draw_circle(uint16_t *data, uint16_t length) {
 void st7789_task_tick(void) {
 	st7789_task_reset();
 	st7789_task_init();
-
+#if 0
 	fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);
 	st7789_draw_circle(circle, CIRCLE_SIZE);
+#endif
 
-	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 0, 319, 239);
+	st7789_task_draw_filled_rect(ST7789_COLOR_GREEN, 0, 0, 319, 239);
 	uint16_t y = 1;
 	uint16_t x = 0;
 	int16_t dir = 1;
+
+//	st7789_set_window(0, 0, 319, 239);
+//	by25q.to_write_index = -1;
+
+	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
 	while(true) {
+#if 0
+		if(by25q.to_write_index >= 0) {
+			st7789_task_write_display((uint16_t*)by25q.data_write, 256/2);
+			by25q.to_write_index = -1;
+		}
+#endif
+#if 0
 		for(x = 0; x < 320-CIRCLE_SIZE; x++) {
 			if((y >= 240-CIRCLE_SIZE) || (y <= 0)){
 				dir = -dir;
@@ -234,6 +247,8 @@ void st7789_task_tick(void) {
 		}
 		uint16_t col = (y>>5)*77;
 		st7789_task_draw_filled_rect(col, 0, 0, 319, 239);
+#endif
+		coop_task_yield();
 	}
 }
 
