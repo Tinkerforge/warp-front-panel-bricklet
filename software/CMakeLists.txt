@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/xmclib/XMCLib/inc/"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/xmclib/CMSIS/Include/"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/xmclib/CMSIS/Infineon/XMC1400_series/Include/"
+	"${PROJECT_SOURCE_DIR}/src/qrcode/"
 )
 
 # find source files
@@ -34,6 +35,7 @@ SET(SOURCES
 	"${PROJECT_SOURCE_DIR}/src/by25q.c"
 	"${PROJECT_SOURCE_DIR}/src/button.c"
 	"${PROJECT_SOURCE_DIR}/src/psram.c"
+	"${PROJECT_SOURCE_DIR}/src/qrcode/qrcode.c"
 
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/hal/uartbb/uartbb.c"
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/hal/system_timer/system_timer.c"
