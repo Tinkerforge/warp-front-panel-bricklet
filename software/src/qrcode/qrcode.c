@@ -38,6 +38,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "bricklib2/os/coop_task.h"
+
 #pragma mark - Error Correction Lookup tables
 
 #if LOCK_VERSION == 0
