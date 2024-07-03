@@ -29,6 +29,7 @@
 #include "spi.h"
 
 #include "by25q.h"
+#include "qrcode.h"
 
 CoopTask st7789_task;
 ST7789 st7789;
@@ -148,7 +149,7 @@ void st7789_task_init(void) {
 	coop_task_sleep_ms(50);
 }
 
-void fill_u16(uint16_t color, uint16_t *data, uint16_t length) {
+void st7789_fill_u16(uint16_t color, uint16_t *data, uint16_t length) {
 	for(uint16_t i = 0; i < length; i++) {
 		data[i] = color;
 	}
@@ -156,7 +157,7 @@ void fill_u16(uint16_t color, uint16_t *data, uint16_t length) {
 
 void st7789_task_draw_filled_rect(uint16_t color, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
 	uint16_t data[100];
-	fill_u16(color, data, 100);
+	st7789_fill_u16(color, data, 100);
 	st7789_set_window(x_start, y_start, x_end, y_end);
 
 	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
@@ -211,6 +212,37 @@ void st7789_draw_circle(uint16_t *data, uint16_t length) {
 	}
 }
 
+// version 1 -> 18x18, 41 byte
+// version 2 -> 21x21, 56 byte
+// version 3 -> 26x26, 85 byte
+// version 4 -> 33x33, 137 byte
+// version 5 -> 42x42, 221 byte
+// version 6 -> 53x53, 352 byte
+// version 7 -> 66x66, 545 byte
+
+void st7789_task_draw_qrcode(char *str, uint16_t x_start, uint16_t y_start, uint8_t pixel_size) {
+    QRCode qrcode;
+    uint8_t data[qrcode_getBufferSize(4)]; // 137 byte, 33x33
+    uint16_t pixel_white[pixel_size*pixel_size];
+    uint16_t pixel_black[pixel_size*pixel_size];
+	st7789_fill_u16(ST7789_COLOR_WHITE, pixel_white, pixel_size*pixel_size);
+	st7789_fill_u16(ST7789_COLOR_BLACK, pixel_black, pixel_size*pixel_size);
+
+    qrcode_initText(&qrcode, data, 4, 1, str);
+
+    for(uint8_t y = 0; y < qrcode.size; y++) {
+        for(uint8_t x = 0; x < qrcode.size; x++) {
+            st7789_task_draw_image(
+                qrcode_getModule(&qrcode, x, y) ? pixel_black : pixel_white,
+                x_start + x*7,
+                y_start + y*7,
+                x_start + (x+1)*7-1,
+                y_start + (y+1)*7-1
+            );
+            coop_task_yield();
+        }
+    }
+}
 void st7789_task_tick(void) {
 	st7789_task_reset();
 	st7789_task_init();
