@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #############################################################
-# This file was automatically generated on 2024-06-30.      #
+# This file was automatically generated on 2024-07-01.      #
 #                                                           #
 # Python Bindings Version 2.1.31                            #
 #                                                           #
@@ -85,8 +85,8 @@ class BrickletWARPFrontPanel(Device):
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_FLASH_INDEX] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_FLASH_INDEX] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_FLASH_DATA] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
-        self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH_SECTOR] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
-        self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH_SECTOR] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_SPITFP_ERROR_COUNT] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -140,7 +140,7 @@ class BrickletWARPFrontPanel(Device):
 
         sector_index = int(sector_index)
 
-        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH_SECTOR, (sector_index,), 'H', 0, '')
+        return self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH_SECTOR, (sector_index,), 'H', 9, 'B')
 
     def erase_flash(self):
         r"""
@@ -148,7 +148,7 @@ class BrickletWARPFrontPanel(Device):
         """
         self.check_validity()
 
-        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH, (), '', 0, '')
+        return self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH, (), '', 9, 'B')
 
     def get_spitfp_error_count(self):
         r"""
