@@ -28,12 +28,15 @@
 #define BY25Q_INSTRUCTION_SIZE 1
 #define BY25Q_ADDRESS_SIZE 3
 #define BY25Q_PAGE_SIZE 256
+#define BY25Q_SECTOR_SIZE 4096
 
 typedef struct {
     uint32_t page_index;
     uint8_t sub_page_index;
 
     int32_t to_write_index;
+    int32_t to_erase_sector_index;
+    bool to_erase_full;
 
     uint8_t data_write[BY25Q_PAGE_SIZE];
     uint8_t data_read[BY25Q_PAGE_SIZE];

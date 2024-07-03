@@ -42,7 +42,7 @@ typedef struct {
 
 extern SPI spi;
 
-void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option);
+void spi_task_transceive(const uint8_t *data_write, uint8_t *data_read, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option);
 void spi_init(void);
 
 #endif

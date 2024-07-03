@@ -34,8 +34,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_SET_FLASH_INDEX:    return length != sizeof(SetFlashIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_flash_index(message);
 		case FID_GET_FLASH_INDEX:    return length != sizeof(GetFlashIndex)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_flash_index(message, response);
 		case FID_SET_FLASH_DATA:     return length != sizeof(SetFlashData)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_flash_data(message, response);
-		case FID_ERASE_FLASH_SECTOR: return length != sizeof(EraseFlashSector) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash_sector(message);
-		case FID_ERASE_FLASH:        return length != sizeof(EraseFlash)       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash(message);
+		case FID_ERASE_FLASH_SECTOR: return length != sizeof(EraseFlashSector) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash_sector(message, response);
+		case FID_ERASE_FLASH:        return length != sizeof(EraseFlash)       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : erase_flash(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -84,14 +84,28 @@ BootloaderHandleMessageResponse set_flash_data(const SetFlashData *data, SetFlas
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data) {
+BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data, EraseFlashSector_Response *response) {
+	response->header.length = sizeof(EraseFlashSector_Response);
+	if(by25q.to_erase_sector_index >= 0) {
+		response->status = WARP_FRONT_PANEL_FLASH_STATUS_BUSY;
+		return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+	}
 
-	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+	by25q.to_erase_sector_index = data->sector_index;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse erase_flash(const EraseFlash *data) {
+BootloaderHandleMessageResponse erase_flash(const EraseFlash *data, EraseFlash_Response *response) {
+	response->header.length = sizeof(EraseFlash_Response);
+	if(by25q.to_erase_full) {
+		response->status = WARP_FRONT_PANEL_FLASH_STATUS_BUSY;
+		return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+	}
 
-	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+	by25q.to_erase_full = true;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 

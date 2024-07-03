@@ -48,22 +48,22 @@ void st7789_init_spi(void) {
 
 void st7789_task_write_byte(const uint8_t data) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(&data, 1, ST7789_SLAVE, 0);
+	spi_task_transceive(&data, NULL, 1, ST7789_SLAVE, 0);
 }
 
 void st7789_task_write_data(const uint8_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive(data, length, ST7789_SLAVE, 0);
+	spi_task_transceive(data, NULL, length, ST7789_SLAVE, 0);
 }
 
 void st7789_task_write_display(const uint16_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
-	spi_task_transceive((uint8_t*)data, length*sizeof(uint16_t), ST7789_SLAVE, SPI_TRANSCEIVE_OPTION_SWAP_U16);
+	spi_task_transceive((uint8_t*)data, NULL, length*sizeof(uint16_t), ST7789_SLAVE, SPI_TRANSCEIVE_OPTION_SWAP_U16);
 }
 
 void st7789_task_write_command(const uint8_t command) {
 	XMC_GPIO_SetOutputLow(ST7789_CD_PIN);
-	spi_task_transceive(&command, 1, ST7789_SLAVE, 0);
+	spi_task_transceive(&command, NULL, 1, ST7789_SLAVE, 0);
 }
 
 void st7789_task_write_command_byte(const uint8_t command, const uint8_t command_data) {
@@ -222,6 +222,13 @@ void st7789_task_tick(void) {
 
 	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
 	while(true) {
+#if 1
+		for(uint32_t add = 0; add < 2; add++) {
+			st7789_task_draw_from_by25q(add*320*240*sizeof(uint16_t), 0, 0, 319, 239);
+			coop_task_yield();
+			coop_task_sleep_ms(2500);
+		}
+#endif
 #if 0
 		if(by25q.to_write_index >= 0) {
 			st7789_task_write_display((uint16_t*)by25q.data_write, 256/2);

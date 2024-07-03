@@ -99,15 +99,25 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
+	uint8_t status;
+} __attribute__((__packed__)) EraseFlashSector_Response;
+
+typedef struct {
+	TFPMessageHeader header;
 } __attribute__((__packed__)) EraseFlash;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t status;
+} __attribute__((__packed__)) EraseFlash_Response;
 
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
 BootloaderHandleMessageResponse get_flash_index(const GetFlashIndex *data, GetFlashIndex_Response *response);
 BootloaderHandleMessageResponse set_flash_data(const SetFlashData *data, SetFlashData_Response *response);
-BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data);
-BootloaderHandleMessageResponse erase_flash(const EraseFlash *data);
+BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data, EraseFlashSector_Response *response);
+BootloaderHandleMessageResponse erase_flash(const EraseFlash *data, EraseFlash_Response *response);
 
 // Callbacks
 

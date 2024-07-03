@@ -27,8 +27,10 @@
 
 #include "bricklib2/os/coop_task.h"
 #include "bricklib2/utility/util_definitions.h"
+#include "bricklib2/logging/logging.h"
 
 #include "xmc_gpio.h"
+#include "xmc_scu.h"
 
 SPI spi;
 
@@ -48,9 +50,25 @@ uint8_t *spi_data_write     = spi.data;
 uint8_t *spi_data_write_end = spi.data;
 
 void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st7789_rx_irq_handler(void) {
-	// Max fill level is 16.
+	// Max fill level is 32.
 	const uint8_t num = XMC_USIC_CH_RXFIFO_GetLevel(ST7789_USIC);
 	switch(num) {
+		case 32: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 31: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 30: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 29: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 28: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 27: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 26: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 25: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 24: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 23: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 22: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 21: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 20: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 19: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 18: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
+		case 17: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
 		case 16: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
 		case 15: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
 		case 14: *spi_data_read = *ST7789_USIC_OUTR_PTR; spi_data_read++;
@@ -71,12 +89,28 @@ void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st
 }
 
 void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st7789_tx_irq_handler(void) {
-	// Max fill level is 16.
+	// Max fill level is 32.
 	const uint8_t to_send    = spi_data_write_end - spi_data_write;
-	const uint8_t fifo_level = 16 - XMC_USIC_CH_TXFIFO_GetLevel(ST7789_USIC);
+	const uint8_t fifo_level = 32 - XMC_USIC_CH_TXFIFO_GetLevel(ST7789_USIC);
 	const uint8_t num        = MIN(to_send, fifo_level);
 
 	switch(num) {
+		case 32: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 31: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 30: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 29: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 28: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 27: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 26: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 25: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 24: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 23: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 22: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 21: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 20: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 19: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 18: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
+		case 17: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
 		case 16: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
 		case 15: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
 		case 14: ST7789_USIC_IN_PTR[0] = *spi_data_write; spi_data_write++;
@@ -100,7 +134,7 @@ void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) st
 	}
 }
 
-void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option) {
+void spi_task_transceive(const uint8_t *data_write, uint8_t *data_read, const uint32_t length, XMC_SPI_CH_SLAVE_SELECT_t slave, const uint8_t option) {
 	if(!(option & SPI_TRANSCEIVE_OPTION_NO_SELECT)) {
 		while(spi.tranceive_ongoing) {
 			coop_task_yield();
@@ -109,13 +143,17 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 
 	spi.tranceive_ongoing = true;
 
-	if(option & SPI_TRANSCEIVE_OPTION_SWAP_U16) {
-		for(uint16_t i = 0; i < length; i+=2) {
-			spi.data[i] = data[i+1];
-			spi.data[i+1] = data[i];
-		}
+	if(data_write == NULL) {
+		memset(spi.data, 0, length);
 	} else {
-		memcpy(spi.data, data, length);
+		if(option & SPI_TRANSCEIVE_OPTION_SWAP_U16) {
+			for(uint16_t i = 0; i < length; i+=2) {
+				spi.data[i] = data_write[i+1];
+				spi.data[i+1] = data_write[i];
+			}
+		} else {
+			memcpy(spi.data, data_write, length);
+		}
 	}
 	spi.data_length = length;
 	spi_data_read = spi.data;
@@ -153,8 +191,8 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 
 		// Disable RX IRQ to avoid race condition and read as much data by
 		// hand as possible.
-		// If there are less then 8 bytes left in the FIFO and the SPI transfer
-		// is finished, we read the rest of the bytes here (the RX IRQ is only called if 8 or
+		// If there are less then 16 bytes left in the FIFO and the SPI transfer
+		// is finished, we read the rest of the bytes here (the RX IRQ is only called if 16 or
 		// more bytes are in the FIFO).
 		NVIC_DisableIRQ(ST7789_IRQ_RX);
 		while(!XMC_USIC_CH_RXFIFO_IsEmpty(ST7789_USIC)) {
@@ -169,6 +207,9 @@ void spi_task_transceive(const uint8_t *data, const uint32_t length, XMC_SPI_CH_
 		coop_task_yield();
 	}
 
+	if(data_read != NULL) {
+		memcpy(data_read, spi.data, length);
+	}
 	if(!(option & SPI_TRANSCEIVE_OPTION_NO_DESELECT)) {
 		XMC_SPI_CH_DisableSlaveSelect(ST7789_USIC);
 		spi.tranceive_ongoing = false;
@@ -224,11 +265,8 @@ void spi_init(void) {
 
 	// Configure the clock polarity and clock delay
 	XMC_SPI_CH_ConfigureShiftClockOutput(ST7789_USIC,
-									     XMC_SPI_CH_BRG_SHIFT_CLOCK_PASSIVE_LEVEL_1_DELAY_DISABLED,
+									     XMC_SPI_CH_BRG_SHIFT_CLOCK_PASSIVE_LEVEL_0_DELAY_ENABLED,
 									     XMC_SPI_CH_BRG_SHIFT_CLOCK_OUTPUT_SCLK);
-/*	XMC_SPI_CH_ConfigureShiftClockOutput(ST7789_USIC,
-										 XMC_SPI_CH_BRG_SHIFT_CLOCK_PASSIVE_LEVEL_0_DELAY_ENABLED,
-										 XMC_SPI_CH_BRG_SHIFT_CLOCK_OUTPUT_SCLK);*/
 	// Configure Leading/Trailing delay
 	XMC_SPI_CH_SetSlaveSelectDelay(ST7789_USIC, 2);
 
@@ -239,10 +277,10 @@ void spi_init(void) {
 	ST7789_USIC_CHANNEL->DX1CR |= USIC_CH_DX1CR_DPOL_Msk;
 
 	// Configure transmit FIFO
-	XMC_USIC_CH_TXFIFO_Configure(ST7789_USIC, 48, XMC_USIC_CH_FIFO_SIZE_16WORDS, 8);
+	XMC_USIC_CH_TXFIFO_Configure(ST7789_USIC, 32, XMC_USIC_CH_FIFO_SIZE_32WORDS, 16);
 
 	// Configure receive FIFO
-	XMC_USIC_CH_RXFIFO_Configure(ST7789_USIC, 32, XMC_USIC_CH_FIFO_SIZE_16WORDS, 8);
+	XMC_USIC_CH_RXFIFO_Configure(ST7789_USIC, 0, XMC_USIC_CH_FIFO_SIZE_32WORDS, 16);
 
 	// Set service request for tx FIFO transmit interrupt
 	XMC_USIC_CH_TXFIFO_SetInterruptNodePointer(ST7789_USIC, XMC_USIC_CH_TXFIFO_INTERRUPT_NODE_POINTER_STANDARD, ST7789_SERVICE_REQUEST_TX);  // IRQ ST7789_IRQ_TX
@@ -253,10 +291,12 @@ void spi_init(void) {
 
 	// Set priority and enable NVIC node for transmit interrupt
 	NVIC_SetPriority((IRQn_Type)ST7789_IRQ_TX, ST7789_IRQ_TX_PRIORITY);
+	XMC_SCU_SetInterruptControl(ST7789_IRQ_TX, ST7789_IRQCTRL_TX);
 	NVIC_EnableIRQ((IRQn_Type)ST7789_IRQ_TX);
 
 	// Set priority and enable NVIC node for receive interrupt
 	NVIC_SetPriority((IRQn_Type)ST7789_IRQ_RX, ST7789_IRQ_RX_PRIORITY);
+	XMC_SCU_SetInterruptControl(ST7789_IRQ_RX, ST7789_IRQCTRL_RX);
 	NVIC_EnableIRQ((IRQn_Type)ST7789_IRQ_RX);
 
 	// Start SPI
