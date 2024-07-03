@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * main.c: Initialization for WARP Front Panel Bricklet
+ * font.h: Draw text to screen from font in flash
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,39 +19,25 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
+#ifndef FONT_H
+#define FONT_H
+
+#include <stdint.h>
 #include <stdbool.h>
 
-#include "configs/config.h"
+typedef struct {
+    uint32_t start_address;
+    uint8_t width;
+    uint8_t height;
+} FontCharset;
 
-#include "bricklib2/bootloader/bootloader.h"
-#include "bricklib2/hal/system_timer/system_timer.h"
-#include "bricklib2/logging/logging.h"
-#include "communication.h"
+typedef struct {
+} Font;
 
-#include "st7789.h"
-#include "by25q.h"
-#include "button.h"
-#include "psram.h"
-#include "font.h"
+extern Font font;
 
-int main(void) {
-	logging_init();
-	logd("Start WARP Front Panel Bricklet\n\r");
+void font_init(void);
+void font_tick(void);
+void font_task_draw_string(const char *str, const uint8_t str_length, const uint8_t index, const uint16_t x_start, const uint16_t y_start);
 
-	communication_init();
-	st7789_init();
-	by25q_init();
-	button_init();
-	psram_init();
-	font_init();
-
-	while(true) {
-		bootloader_tick();
-		communication_tick();
-		st7789_tick();
-		by25q_tick();
-		button_tick();
-		psram_tick();
-	}
-}
+#endif

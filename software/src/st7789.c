@@ -30,6 +30,7 @@
 
 #include "by25q.h"
 #include "qrcode.h"
+#include "font.h"
 
 CoopTask st7789_task;
 ST7789 st7789;
@@ -259,9 +260,19 @@ void st7789_task_tick(void) {
 //	st7789_set_window(0, 0, 319, 239);
 //	by25q.to_write_index = -1;
 
-	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
+//	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
+	font_task_draw_string("!\"#$%%&'()*+,-./01234567", 24, 0, 0, 0);
+	font_task_draw_string("89:;<=>?@ABCDEFGHIJKLMNO", 24, 0, 0, 18);
+	font_task_draw_string("PQRSTUVWXYZ[\\]^_`abcdefg", 24, 0, 0, 36);
+	font_task_draw_string("hijklmnopqrstuvwxyz{|}~", 24, 0, 0, 54);
+	char special_chars[32] = {'\0'};
+	for(uint8_t i = 16; i < 33; i++) {
+		special_chars[i-16] = i;
+	}
+	font_task_draw_string(special_chars, strlen(special_chars), 0, 0, 72);
+
 	while(true) {
-#if 1
+#if 0
 		for(uint32_t add = 0; add < 2; add++) {
 			st7789_task_draw_from_by25q(add*320*240*sizeof(uint16_t), 0, 0, 319, 239);
 			coop_task_yield();
