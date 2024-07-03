@@ -261,6 +261,7 @@ static void applyMask(BitBucket *modules, BitBucket *isFunction, uint8_t mask) {
     uint8_t size = modules->bitOffsetOrWidth;
     
     for (uint8_t y = 0; y < size; y++) {
+        coop_task_yield();
         for (uint8_t x = 0; x < size; x++) {
             if (bb_getBit(isFunction, x, y)) { continue; }
             
@@ -281,6 +282,7 @@ static void applyMask(BitBucket *modules, BitBucket *isFunction, uint8_t mask) {
 }
 
 static void setFunctionModule(BitBucket *modules, BitBucket *isFunction, uint8_t x, uint8_t y, bool on) {
+    coop_task_yield();
     bb_setBit(modules, x, y, on);
     bb_setBit(isFunction, x, y, true);
 }
@@ -467,6 +469,7 @@ static void drawCodewords(BitBucket *modules, BitBucket *isFunction, BitBucket *
                 }
                 // If there are any remainder bits (0 to 7), they are already
                 // set to 0/false/white when the grid of modules was initialized
+                coop_task_yield();
             }
         }
     }
@@ -491,7 +494,7 @@ static uint32_t getPenaltyScore(BitBucket *modules) {
     
     // Adjacent modules in row having same color
     for (uint8_t y = 0; y < size; y++) {
-        
+        coop_task_yield();
         bool colorX = bb_getBit(modules, 0, y);
         for (uint8_t x = 1, runX = 1; x < size; x++) {
             bool cx = bb_getBit(modules, x, y);
@@ -512,6 +515,7 @@ static uint32_t getPenaltyScore(BitBucket *modules) {
     
     // Adjacent modules in column having same color
     for (uint8_t x = 0; x < size; x++) {
+        coop_task_yield();
         bool colorY = bb_getBit(modules, x, 0);
         for (uint8_t y = 1, runY = 1; y < size; y++) {
             bool cy = bb_getBit(modules, x, y);
@@ -531,6 +535,7 @@ static uint32_t getPenaltyScore(BitBucket *modules) {
     
     uint16_t black = 0;
     for (uint8_t y = 0; y < size; y++) {
+        coop_task_yield();
         uint16_t bitsRow = 0, bitsCol = 0;
         for (uint8_t x = 0; x < size; x++) {
             bool color = bb_getBit(modules, x, y);
@@ -596,6 +601,7 @@ static void rs_init(uint8_t degree, uint8_t *coeff) {
     // Note that r = 0x02, which is a generator element of this field GF(2^8/0x11D).
     uint16_t root = 1;
     for (uint8_t i = 0; i < degree; i++) {
+        coop_task_yield();
         // Multiply the current product by (x - r^i)
         for (uint8_t j = 0; j < degree; j++) {
             coeff[j] = rs_multiply(coeff[j], root);
@@ -614,6 +620,7 @@ static void rs_getRemainder(uint8_t degree, uint8_t *coeff, uint8_t *data, uint8
     //memset(result, 0, degree);
     
     for (uint8_t i = 0; i < length; i++) {
+        coop_task_yield();
         uint8_t factor = data[i] ^ result[0];
         for (uint8_t j = 1; j < degree; j++) {
             result[(j - 1) * stride] = result[j * stride];
@@ -641,6 +648,7 @@ static int8_t encodeDataCodewords(BitBucket *dataCodewords, const uint8_t *text,
         uint16_t accumData = 0;
         uint8_t accumCount = 0;
         for (uint16_t i = 0; i < length; i++) {
+            coop_task_yield();
             accumData = accumData * 10 + ((char)(text[i]) - '0');
             accumCount++;
             if (accumCount == 3) {
@@ -663,6 +671,7 @@ static int8_t encodeDataCodewords(BitBucket *dataCodewords, const uint8_t *text,
         uint16_t accumData = 0;
         uint8_t accumCount = 0;
         for (uint16_t i = 0; i  < length; i++) {
+            coop_task_yield();
             accumData = accumData * 45 + getAlphanumeric((char)(text[i]));
             accumCount++;
             if (accumCount == 2) {
@@ -681,6 +690,7 @@ static int8_t encodeDataCodewords(BitBucket *dataCodewords, const uint8_t *text,
         bb_appendBits(dataCodewords, 1 << MODE_BYTE, 4);
         bb_appendBits(dataCodewords, length, getModeBits(version, MODE_BYTE));
         for (uint16_t i = 0; i < length; i++) {
+            coop_task_yield();
             bb_appendBits(dataCodewords, (char)(text[i]), 8);
         }
     }
@@ -721,6 +731,7 @@ static void performErrorCorrection(uint8_t version, uint8_t ecc, BitBucket *data
     
     
     // Interleave all short blocks
+    coop_task_yield();
     for (uint8_t i = 0; i < shortDataBlockLen; i++) {
         uint16_t index = i;
         uint8_t stride = shortDataBlockLen;
@@ -733,7 +744,8 @@ static void performErrorCorrection(uint8_t version, uint8_t ecc, BitBucket *data
             index += stride;
         }
     }
-    
+    coop_task_yield();
+
     // Version less than 5 only have short blocks
 #if LOCK_VERSION == 0 || LOCK_VERSION >= 5
     {
@@ -796,8 +808,10 @@ int8_t qrcode_initBytes(QRCode *qrcode, uint8_t *modules, uint8_t version, uint8
     
     struct BitBucket codewords;
     uint8_t codewordBytes[bb_getBufferSizeBytes(moduleCount)];
+    coop_task_yield();
     bb_initBuffer(&codewords, codewordBytes, (int32_t)sizeof(codewordBytes));
-    
+    coop_task_yield();
+
     // Place the data code words into the buffer
     int8_t mode = encodeDataCodewords(&codewords, data, length, version);
     
@@ -808,25 +822,33 @@ int8_t qrcode_initBytes(QRCode *qrcode, uint8_t *modules, uint8_t version, uint8
     uint32_t padding = (dataCapacity * 8) - codewords.bitOffsetOrWidth;
     if (padding > 4) { padding = 4; }
     bb_appendBits(&codewords, 0, padding);
+    coop_task_yield();
     bb_appendBits(&codewords, 0, (8 - codewords.bitOffsetOrWidth % 8) % 8);
+    coop_task_yield();
 
     // Pad with alternate bytes until data capacity is reached
     for (uint8_t padByte = 0xEC; codewords.bitOffsetOrWidth < (dataCapacity * 8); padByte ^= 0xEC ^ 0x11) {
         bb_appendBits(&codewords, padByte, 8);
+        coop_task_yield();
     }
 
     BitBucket modulesGrid;
     bb_initGrid(&modulesGrid, modules, size);
-    
+    coop_task_yield();
+
     BitBucket isFunctionGrid;
     uint8_t isFunctionGridBytes[bb_getGridSizeBytes(size)];
     bb_initGrid(&isFunctionGrid, isFunctionGridBytes, size);
-    
+    coop_task_yield();
+
     // Draw function patterns, draw all codewords, do masking
     drawFunctionPatterns(&modulesGrid, &isFunctionGrid, version, eccFormatBits);
+    coop_task_yield();
     performErrorCorrection(version, eccFormatBits, &codewords);
+    coop_task_yield();
     drawCodewords(&modulesGrid, &isFunctionGrid, &codewords);
-    
+    coop_task_yield();
+
     // Find the best (lowest penalty) mask
     uint8_t mask = 0;
     int32_t minPenalty = INT32_MAX;
@@ -838,6 +860,7 @@ int8_t qrcode_initBytes(QRCode *qrcode, uint8_t *modules, uint8_t version, uint8
             mask = i;
             minPenalty = penalty;
         }
+        coop_task_yield();
         applyMask(&modulesGrid, &isFunctionGrid, i);  // Undoes the mask due to XOR
     }
     
