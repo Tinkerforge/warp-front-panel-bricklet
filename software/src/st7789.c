@@ -59,6 +59,13 @@ void st7789_task_write_data(const uint8_t *data, const uint32_t length) {
 void st7789_task_write_display(const uint16_t *data, const uint32_t length) {
 	XMC_GPIO_SetOutputHigh(ST7789_CD_PIN);
 	spi_task_transceive((uint8_t*)data, NULL, length*sizeof(uint16_t), ST7789_SLAVE, SPI_TRANSCEIVE_OPTION_SWAP_U16);
+
+	// If there is data to write to the by25q, we wait here until it is written.
+	// This makes sure that there can be at least on write to the by25q per write to the display.
+	// Otherwise the st7789 could block the SPI bus.
+	while(by25q_has_data_to_write()) {
+		coop_task_yield();
+	}
 }
 
 void st7789_task_write_command(const uint8_t command) {

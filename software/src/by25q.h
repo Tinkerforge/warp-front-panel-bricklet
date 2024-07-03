@@ -52,6 +52,7 @@ extern BY25Q by25q;
 void by25q_init(void);
 void by25q_tick(void);
 void by25q_task_read(uint8_t *data, const uint16_t length, const uint32_t address);
+bool by25q_has_data_to_write(void);
 
 // Configuration and status instructions
 #define BY25Q_OPCODE_WRITE_ENABLE                 0x06

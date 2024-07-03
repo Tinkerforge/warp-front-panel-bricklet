@@ -152,6 +152,10 @@ void by25q_task_read(uint8_t *data, const uint16_t length, const uint32_t addres
 	by25q.rwe_in_progress = false;
 }
 
+bool by25q_has_data_to_write(void) {
+	return by25q.to_erase_full || (by25q.to_erase_sector_index >= 0) || (by25q.to_write_index >= 0);
+}
+
 void by25q_task_init(void) {
 
 }
