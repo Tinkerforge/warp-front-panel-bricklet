@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * main.c: Initialization for WARP Front Panel Bricklet
+ * sprite.h: Draw sprites to screen from flash
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,41 +19,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
+#ifndef SPRITE_H
+#define SPRITE_H
+
+#include <stdint.h>
 #include <stdbool.h>
 
-#include "configs/config.h"
+typedef struct {
+    uint32_t start_address;
+    uint8_t width;
+    uint8_t height;
+} SpriteList;
 
-#include "bricklib2/bootloader/bootloader.h"
-#include "bricklib2/hal/system_timer/system_timer.h"
-#include "bricklib2/logging/logging.h"
-#include "communication.h"
+typedef struct {
+} Sprite;
 
-#include "st7789.h"
-#include "by25q.h"
-#include "button.h"
-#include "psram.h"
-#include "font.h"
-#include "sprite.h"
+extern Sprite sprite;
 
-int main(void) {
-	logging_init();
-	logd("Start WARP Front Panel Bricklet\n\r");
+void sprite_init(void);
+void sprite_tick(void);
 
-	communication_init();
-	st7789_init();
-	by25q_init();
-	button_init();
-	psram_init();
-	font_init();
-	sprite_init();
-
-	while(true) {
-		bootloader_tick();
-		communication_tick();
-		st7789_tick();
-		by25q_tick();
-		button_tick();
-		psram_tick();
-	}
-}
+#endif

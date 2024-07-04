@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * main.c: Initialization for WARP Front Panel Bricklet
+ * sprite.c: Draw sprites to screen from flash
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,41 +19,29 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
-#include <stdbool.h>
 
-#include "configs/config.h"
-
-#include "bricklib2/bootloader/bootloader.h"
-#include "bricklib2/hal/system_timer/system_timer.h"
-#include "bricklib2/logging/logging.h"
-#include "communication.h"
-
-#include "st7789.h"
-#include "by25q.h"
-#include "button.h"
-#include "psram.h"
-#include "font.h"
 #include "sprite.h"
 
-int main(void) {
-	logging_init();
-	logd("Start WARP Front Panel Bricklet\n\r");
+#include <string.h>
 
-	communication_init();
-	st7789_init();
-	by25q_init();
-	button_init();
-	psram_init();
-	font_init();
-	sprite_init();
+Sprite sprite;
+SpriteList sprite_list[] = {
+};
 
-	while(true) {
-		bootloader_tick();
-		communication_tick();
-		st7789_tick();
-		by25q_tick();
-		button_tick();
-		psram_tick();
-	}
+void font_task_draw(const uint8_t index, const uint16_t x_start, const uint16_t y_start) {
+    st7789_task_draw_from_by25q(
+        sprite_list[index].start_address,
+        x_start,
+        y_start,
+        x_start + sprite_list[index].width - 1,
+        y_start + sprite_list[index].height - 1
+    );
+}
+
+void sprite_init(void) {
+	memset(&sprite, 0, sizeof(Sprite));
+}
+
+void sprite_tick(void) {
+
 }
