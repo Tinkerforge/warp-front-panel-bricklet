@@ -26,17 +26,17 @@
 #include "st7789.h"
 
 Font font;
-FontCharset font_charset[4] = {
+FontList font_list[4] = {
     {0, 10, 17},
 };
 
 void font_task_draw_string(const char *str, const uint8_t str_length, const uint8_t index, const uint16_t x_start, const uint16_t y_start) {
-    const uint32_t char_offset = font_charset[index].width * font_charset[index].height*sizeof(uint16_t);
-    const uint32_t y_end       = y_start + font_charset[index].height -1;
+    const uint32_t char_offset = font_list[index].width * font_list[index].height*sizeof(uint16_t);
+    const uint32_t y_end       = y_start + font_list[index].height -1;
     for(uint16_t i = 0; i < str_length; i++) {
-        const uint32_t address      = font_charset[index].start_address + char_offset*((uint32_t)str[i]);
-        const uint32_t x_start_next = x_start      + font_charset[index].width*i;
-        const uint32_t x_end        = x_start_next + font_charset[index].width -1;
+        const uint32_t address      = font_list[index].start_address + char_offset*((uint32_t)str[i]);
+        const uint32_t x_start_next = x_start      + font_list[index].width*i;
+        const uint32_t x_end        = x_start_next + font_list[index].width -1;
         st7789_task_draw_from_by25q(address, x_start_next, y_start, x_end, y_end);
     }
 }
