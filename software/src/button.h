@@ -26,6 +26,9 @@
 #include <stdbool.h>
 
 typedef struct {
+    uint32_t last_pressed;
+    uint32_t index;
+    bool is_pressed;
 } Button;
 
 extern Button button;
