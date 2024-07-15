@@ -34,6 +34,8 @@
 #include "button.h"
 #include "page_front.h"
 #include "page_wifi_setup.h"
+#include "display.h"
+#include "status_bar.h"
 
 CoopTask st7789_task;
 ST7789 st7789;
@@ -106,7 +108,7 @@ void st7789_task_reset(void) {
 	coop_task_sleep_ms(120);
 }
 
-void st7789_set_window(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
+void st7789_set_window(const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
 	// Column address
 	st7789_task_write_command_data(ST7789_CMD_CASET, (uint8_t[]){x_start >> 8, x_start & 0xFF, x_end >> 8, x_end & 0xFF}, 4);
 
@@ -153,97 +155,25 @@ void st7789_task_init(void) {
 	coop_task_sleep_ms(50);
 }
 
-void st7789_fill_u16(const uint16_t color, uint16_t *data, const uint16_t length) {
-	for(uint16_t i = 0; i < length; i++) {
-		data[i] = color;
-	}
-}
-
-void st7789_task_draw_filled_rect(uint16_t color, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
-	uint16_t data[100];
-	st7789_fill_u16(color, data, 100);
-	st7789_set_window(x_start, y_start, x_end, y_end);
-
-	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
-	while(length > 0) {
-		uint16_t length_write = MIN(100, length);
-		st7789_task_write_display(data, length_write);
-		length -= length_write;
-	}
-}
-
-void st7789_task_draw_image(uint16_t *image, uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end) {
-	st7789_set_window(x_start, y_start, x_end, y_end);
-
-	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
-	while(length > 0) {
-		uint16_t length_write = MIN(100, length);
-		st7789_task_write_display(image, length_write);
-		image+=length_write;
-		length -= length_write;
-	}
-}
-
-void st7789_task_draw_from_by25q(const uint32_t address_start, const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
-	st7789_set_window(x_start, y_start, x_end, y_end);
-
-	// window length for 8bit data
-	uint32_t window_length = (x_end - x_start + 1)*(y_end-y_start+1)*sizeof(uint16_t);
-	uint32_t address = address_start;
-	uint8_t data[BY25Q_PAGE_SIZE] = {0};
-	while(window_length > 0) {
-		uint16_t length = MIN(BY25Q_PAGE_SIZE, window_length);
-		by25q_task_read(data, length, address);
-		st7789_task_write_display((uint16_t*)data, length/sizeof(uint16_t));
-		window_length -= length;
-		address       += length;
-	}
-}
-
-void st7789_task_draw_background(void) {
-	st7789_task_draw_filled_rect(ST7789_COLOR_BLUE, 0, 0, 319, 29);
-	sprite_task_draw(SPRITE_STATUS_ICON_WIFI, 0, 0);
-	sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, sprite_list[SPRITE_STATUS_ICON_WIFI].width, 0);
-	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
-}
-
-#define CIRCLE_SIZE 24
-uint16_t circle[CIRCLE_SIZE*CIRCLE_SIZE];
-void st7789_draw_circle(uint16_t *data, uint16_t length) {
-	for(int row = 0; row < length; row++) {
-		for(int col = 0; col < length; col++) {
-			int x = col - length/2;
-			int y = length/2 - row;
-			int sumsq = x*x + y*y;
-
-			if((sumsq > 95) && (sumsq < 105)) {
-				data[col*length + row] = ST7789_COLOR_WHITE;
-			}
-		}
-	}
-}
 
 void st7789_task_tick(void) {
 	st7789_task_reset();
 	st7789_task_init();
+
+	// Read top-left pixel of WIFI symbol for status bar background color
+	by25q_task_read((uint8_t*)&status_bar.background_color, 2, sprite_list[SPRITE_STATUS_ICON_WIFI].start_address);
+
 #if 0
 	fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);
 	st7789_draw_circle(circle, CIRCLE_SIZE);
 #endif
 
+#if 0
 	st7789_task_draw_filled_rect(ST7789_COLOR_WHITE, 0, 0, 319, 239);
 	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 1, 1, 318, 238);
 	uint16_t y = 1;
 	uint16_t x = 0;
 	int16_t dir = 1;
-
-//	st7789_set_window(0, 0, 319, 239);
-//	by25q.to_write_index = -1;
-
-//	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
-
-#if 0
-
 #endif
 
 #if 0
@@ -258,34 +188,9 @@ void st7789_task_tick(void) {
 	font_task_draw_string(special_chars, strlen(special_chars), 0, 0, 72);
 #endif
 
-	char str_unpressed[11] = " Press Me ";
-	str_unpressed[0] = 1;
-	str_unpressed[6] = 1;
-	str_unpressed[9] = 1;
-	char str_pressed[11]   = "  Thanks  ";
-	str_pressed[0] = 16;
-	str_pressed[1] = 1;
-	str_pressed[8] = 1;
-	str_pressed[9] = 16;
-	static uint8_t last_index = 255;
 	while(true) {
-		uint8_t new_index = button.index % 2;
-		bool redraw_everything = new_index != last_index;
-		last_index = new_index;
-		switch(new_index) {
-			default:
-			case 0: {
-				page_front.redraw_everything = redraw_everything;
-				page_front_task_tick();
-				break;
-			}
-
-			case 1: {
-				page_wifi_setup.redraw_everything = redraw_everything;
-				page_wifi_setup_task_tick();
-				break;
-			}
-		}
+		display_task_tick();
+		status_bar_task_tick();
 
 #if 0
 		if(button.is_pressed) {
