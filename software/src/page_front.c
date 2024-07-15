@@ -23,22 +23,52 @@
 
 #include <string.h>
 
-#include "st7789.h"
+#include "display.h"
+#include "sprite.h"
+#include "font.h"
+
+#define ICON_HEIGHT 70
+
+#define ICON_ROW1_START 0
+#define ICON_ROW2_START 161
 
 PageFront page_front;
+PageFrontIconList page_front_icon_list[12];
+
+const PageFrontIconPosition page_front_icon_position[6] = {
+    {0, 30, 90, 10+30, 90, 10+30+30}, // top left
+    {0, 30+ICON_HEIGHT, 90, 10+30+ICON_HEIGHT, 90, 10+30+30+ICON_HEIGHT}, // mid left
+    {0, 30+ICON_HEIGHT*2, 90, 10+30+ICON_HEIGHT*2, 90, 10+30+30+ICON_HEIGHT*2}, // bottom left
+    {ICON_ROW2_START, 30, ICON_ROW2_START+90, 10+30, ICON_ROW2_START+90, 10+30+30}, // top right
+    {ICON_ROW2_START, 30+ICON_HEIGHT, ICON_ROW2_START+90, 10+30+ICON_HEIGHT, ICON_ROW2_START+90, 10+30+30+ICON_HEIGHT}, // mid right
+    {ICON_ROW2_START, 30+ICON_HEIGHT*2, ICON_ROW2_START+90, 10+30+ICON_HEIGHT*2, ICON_ROW2_START+90, 10+30+30+ICON_HEIGHT*2} // bottom right
+};
 
 void page_front_init(void) {
-	memset(&page_front, 0, sizeof(PageFront));
+    memset(&page_front, 0, sizeof(PageFront));
 }
 
 void page_front_task_tick(void) {
-	if(page_front.redraw_everything) {
-		page_front.redraw_background = true;
-		page_front.redraw_everything = false;
-	}
+    if(page_front.redraw_everything) {
+        page_front.redraw_background = true;
+        page_front.redraw_everything = false;
+    }
 
-	if(page_front.redraw_background) {
-		st7789_task_draw_background();
-		page_front.redraw_background = false;
-	}
+    if(page_front.redraw_background) {
+        display_task_draw_background();
+        page_front.redraw_background = false;
+    }
+
+    for(uint8_t i = 0; i < 6; i++) {
+        if(page_front_icon_list[i].redraw) {
+            if(page_front_icon_list[i].active) {
+                sprite_task_draw(page_front_icon_list[i].sprite_index, page_front_icon_position[i].icon_x, page_front_icon_position[i].icon_y);
+                font_task_draw_string(page_front_icon_list[i].text_1, 7, 0, page_front_icon_position[i].text1_x, page_front_icon_position[i].text1_y);
+                font_task_draw_string(page_front_icon_list[i].text_2, 7, 0, page_front_icon_position[i].text2_x, page_front_icon_position[i].text2_y);
+            } else {
+
+            }
+        }
+
+    }
 }

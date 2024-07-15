@@ -26,10 +26,30 @@
 #include <stdbool.h>
 
 typedef struct {
+    uint16_t icon_x;
+    uint16_t icon_y;
+    uint16_t text1_x;
+    uint16_t text1_y;
+    uint16_t text2_x;
+    uint16_t text2_y;
+} PageFrontIconPosition;
+
+typedef struct {
+    bool redraw;
+    bool active;
+    uint32_t sprite_index;
+    char text_1[10];
+    uint8_t font_index_1;
+    char text_2[10];
+    uint8_t font_index_2;
+} PageFrontIconList;
+
+typedef struct {
     bool redraw_everything;
     bool redraw_background;
 } PageFront;
 
+extern PageFrontIconList page_front_icon_list[12];
 extern PageFront page_front;
 
 void page_front_init(void);
