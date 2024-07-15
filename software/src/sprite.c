@@ -26,9 +26,10 @@
 
 Sprite sprite;
 SpriteList sprite_list[] = {
+    #include "sprite_list.h"
 };
 
-void font_task_draw(const uint8_t index, const uint16_t x_start, const uint16_t y_start) {
+void sprite_task_draw(const uint8_t index, const uint16_t x_start, const uint16_t y_start) {
     st7789_task_draw_from_by25q(
         sprite_list[index].start_address,
         x_start,

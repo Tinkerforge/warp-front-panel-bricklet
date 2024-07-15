@@ -37,6 +37,8 @@ SET(SOURCES
 	"${PROJECT_SOURCE_DIR}/src/psram.c"
 	"${PROJECT_SOURCE_DIR}/src/font.c"
 	"${PROJECT_SOURCE_DIR}/src/sprite.c"
+	"${PROJECT_SOURCE_DIR}/src/page_front.c"
+	"${PROJECT_SOURCE_DIR}/src/page_wifi_setup.c"
 	"${PROJECT_SOURCE_DIR}/src/qrcode/qrcode.c"
 
 	"${PROJECT_SOURCE_DIR}/src/bricklib2/hal/uartbb/uartbb.c"

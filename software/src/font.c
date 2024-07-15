@@ -26,8 +26,8 @@
 #include "st7789.h"
 
 Font font;
-FontList font_list[4] = {
-    {0, 10, 17},
+FontList font_list[] = {
+    #include "font_list.h"
 };
 
 void font_task_draw_string(const char *str, const uint8_t str_length, const uint8_t index, const uint16_t x_start, const uint16_t y_start) {

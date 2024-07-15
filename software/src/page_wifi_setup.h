@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * font.h: Draw text to screen from font in flash
+ * page_wifi_setup.h: Display page for WIFI setup
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,28 +19,22 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef FONT_H
-#define FONT_H
+#ifndef PAGE_WIFI_SETUP_H
+#define PAGE_WIFI_SETUP_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "font_defines.h"
-
 typedef struct {
-    uint32_t start_address;
-    uint8_t width;
-    uint8_t height;
-} FontList;
+    bool redraw_everything;
+    bool redraw_background;
+    bool redraw_qrcode;
+} PageWifiSetup;
 
-typedef struct {
-} Font;
+extern PageWifiSetup page_wifi_setup;
 
-extern FontList font_list[];
-extern Font font;
+void page_wifi_setup_init(void);
+void page_wifi_setup_task_tick(void);
 
-void font_init(void);
-void font_tick(void);
-void font_task_draw_string(const char *str, const uint8_t str_length, const uint8_t index, const uint16_t x_start, const uint16_t y_start);
 
 #endif

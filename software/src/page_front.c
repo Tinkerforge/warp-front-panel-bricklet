@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * font.h: Draw text to screen from font in flash
+ * page_front.c: First display page
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,28 +19,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef FONT_H
-#define FONT_H
+#include "page_front.h"
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <string.h>
 
-#include "font_defines.h"
+#include "st7789.h"
 
-typedef struct {
-    uint32_t start_address;
-    uint8_t width;
-    uint8_t height;
-} FontList;
+PageFront page_front;
 
-typedef struct {
-} Font;
+void page_front_init(void) {
+	memset(&page_front, 0, sizeof(PageFront));
+}
 
-extern FontList font_list[];
-extern Font font;
+void page_front_task_tick(void) {
+	if(page_front.redraw_everything) {
+		page_front.redraw_background = true;
+		page_front.redraw_everything = false;
+	}
 
-void font_init(void);
-void font_tick(void);
-void font_task_draw_string(const char *str, const uint8_t str_length, const uint8_t index, const uint16_t x_start, const uint16_t y_start);
-
-#endif
+	if(page_front.redraw_background) {
+		st7789_task_draw_background();
+		page_front.redraw_background = false;
+	}
+}

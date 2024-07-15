@@ -25,18 +25,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "sprite_defines.h"
+
 typedef struct {
     uint32_t start_address;
-    uint8_t width;
-    uint8_t height;
+    uint16_t width;
+    uint16_t height;
 } SpriteList;
 
 typedef struct {
 } Sprite;
 
+extern SpriteList sprite_list[];
 extern Sprite sprite;
 
 void sprite_init(void);
 void sprite_tick(void);
+void sprite_task_draw(const uint8_t index, const uint16_t x_start, const uint16_t y_start);
 
 #endif

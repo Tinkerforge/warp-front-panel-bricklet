@@ -35,6 +35,8 @@
 #include "psram.h"
 #include "font.h"
 #include "sprite.h"
+#include "page_front.h"
+#include "page_wifi_setup.h"
 
 int main(void) {
 	logging_init();
@@ -47,6 +49,8 @@ int main(void) {
 	psram_init();
 	font_init();
 	sprite_init();
+	page_front_init();
+	page_wifi_setup_init();
 
 	while(true) {
 		bootloader_tick();

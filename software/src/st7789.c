@@ -29,8 +29,11 @@
 #include "spi.h"
 
 #include "by25q.h"
-#include "qrcode.h"
 #include "font.h"
+#include "sprite.h"
+#include "button.h"
+#include "page_front.h"
+#include "page_wifi_setup.h"
 
 CoopTask st7789_task;
 ST7789 st7789;
@@ -150,7 +153,7 @@ void st7789_task_init(void) {
 	coop_task_sleep_ms(50);
 }
 
-void st7789_fill_u16(uint16_t color, uint16_t *data, uint16_t length) {
+void st7789_fill_u16(const uint16_t color, uint16_t *data, const uint16_t length) {
 	for(uint16_t i = 0; i < length; i++) {
 		data[i] = color;
 	}
@@ -197,6 +200,13 @@ void st7789_task_draw_from_by25q(const uint32_t address_start, const uint16_t x_
 	}
 }
 
+void st7789_task_draw_background(void) {
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLUE, 0, 0, 319, 29);
+	sprite_task_draw(SPRITE_STATUS_ICON_WIFI, 0, 0);
+	sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, sprite_list[SPRITE_STATUS_ICON_WIFI].width, 0);
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
+}
+
 #define CIRCLE_SIZE 24
 uint16_t circle[CIRCLE_SIZE*CIRCLE_SIZE];
 void st7789_draw_circle(uint16_t *data, uint16_t length) {
@@ -213,37 +223,6 @@ void st7789_draw_circle(uint16_t *data, uint16_t length) {
 	}
 }
 
-// version 1 -> 18x18, 41 byte
-// version 2 -> 21x21, 56 byte
-// version 3 -> 26x26, 85 byte
-// version 4 -> 33x33, 137 byte
-// version 5 -> 42x42, 221 byte
-// version 6 -> 53x53, 352 byte
-// version 7 -> 66x66, 545 byte
-
-void st7789_task_draw_qrcode(char *str, uint16_t x_start, uint16_t y_start, uint8_t pixel_size) {
-    QRCode qrcode;
-    uint8_t data[qrcode_getBufferSize(4)]; // 137 byte, 33x33
-    uint16_t pixel_white[pixel_size*pixel_size];
-    uint16_t pixel_black[pixel_size*pixel_size];
-	st7789_fill_u16(ST7789_COLOR_WHITE, pixel_white, pixel_size*pixel_size);
-	st7789_fill_u16(ST7789_COLOR_BLACK, pixel_black, pixel_size*pixel_size);
-
-    qrcode_initText(&qrcode, data, 4, 1, str);
-
-    for(uint8_t y = 0; y < qrcode.size; y++) {
-        for(uint8_t x = 0; x < qrcode.size; x++) {
-            st7789_task_draw_image(
-                qrcode_getModule(&qrcode, x, y) ? pixel_black : pixel_white,
-                x_start + x*7,
-                y_start + y*7,
-                x_start + (x+1)*7-1,
-                y_start + (y+1)*7-1
-            );
-            coop_task_yield();
-        }
-    }
-}
 void st7789_task_tick(void) {
 	st7789_task_reset();
 	st7789_task_init();
@@ -252,7 +231,8 @@ void st7789_task_tick(void) {
 	st7789_draw_circle(circle, CIRCLE_SIZE);
 #endif
 
-	st7789_task_draw_filled_rect(ST7789_COLOR_GREEN, 0, 0, 319, 239);
+	st7789_task_draw_filled_rect(ST7789_COLOR_WHITE, 0, 0, 319, 239);
+	st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 1, 1, 318, 238);
 	uint16_t y = 1;
 	uint16_t x = 0;
 	int16_t dir = 1;
@@ -261,6 +241,12 @@ void st7789_task_tick(void) {
 //	by25q.to_write_index = -1;
 
 //	st7789_task_draw_from_by25q(0, 0, 0, 319, 239);
+
+#if 0
+
+#endif
+
+#if 0
 	font_task_draw_string("!\"#$%%&'()*+,-./01234567", 24, 0, 0, 0);
 	font_task_draw_string("89:;<=>?@ABCDEFGHIJKLMNO", 24, 0, 0, 18);
 	font_task_draw_string("PQRSTUVWXYZ[\\]^_`abcdefg", 24, 0, 0, 36);
@@ -270,8 +256,44 @@ void st7789_task_tick(void) {
 		special_chars[i-16] = i;
 	}
 	font_task_draw_string(special_chars, strlen(special_chars), 0, 0, 72);
+#endif
 
+	char str_unpressed[11] = " Press Me ";
+	str_unpressed[0] = 1;
+	str_unpressed[6] = 1;
+	str_unpressed[9] = 1;
+	char str_pressed[11]   = "  Thanks  ";
+	str_pressed[0] = 16;
+	str_pressed[1] = 1;
+	str_pressed[8] = 1;
+	str_pressed[9] = 16;
+	static uint8_t last_index = 255;
 	while(true) {
+		uint8_t new_index = button.index % 2;
+		bool redraw_everything = new_index != last_index;
+		last_index = new_index;
+		switch(new_index) {
+			default:
+			case 0: {
+				page_front.redraw_everything = redraw_everything;
+				page_front_task_tick();
+				break;
+			}
+
+			case 1: {
+				page_wifi_setup.redraw_everything = redraw_everything;
+				page_wifi_setup_task_tick();
+				break;
+			}
+		}
+
+#if 0
+		if(button.is_pressed) {
+			font_task_draw_string(str_pressed, 10, 0, 100, 100);
+		} else {
+			font_task_draw_string(str_unpressed, 10, 0, 100, 100);
+		}
+#endif
 #if 0
 		for(uint32_t add = 0; add < 2; add++) {
 			st7789_task_draw_from_by25q(add*320*240*sizeof(uint16_t), 0, 0, 319, 239);
