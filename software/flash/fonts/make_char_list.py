@@ -5,10 +5,10 @@ s = 'text 0,0 \"\n'
 
 extra_chars = ['☂', '☁', '☀', '→', '↓', '←', '↑', '↺', 'ß', 'ẞ', 'ä', 'Ä', 'ö', 'Ö', 'ü', 'Ü', '€']
 
-extra_chars = ['█'] + [' ']*(31-len(extra_chars)) + extra_chars
+extra_chars = ['█'] + [' ']*(32-len(extra_chars)) + extra_chars
 
 for i, c in enumerate(extra_chars):
-    print(str(i) + ' "' + c + '"')
+    print(str(i-1) + ' "' + c + '"')
     s += c + '\n'
 
 for i in range(32, 127):
