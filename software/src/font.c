@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "st7789.h"
+#include "display.h"
 
 Font font;
 FontList font_list[] = {
@@ -37,7 +38,7 @@ void font_task_draw_string(const char *str, const uint8_t str_length, const uint
         const uint32_t address      = font_list[index].start_address + char_offset*((uint32_t)str[i]);
         const uint32_t x_start_next = x_start      + font_list[index].width*i;
         const uint32_t x_end        = x_start_next + font_list[index].width -1;
-        st7789_task_draw_from_by25q(address, x_start_next, y_start, x_end, y_end);
+        display_task_draw_from_by25q(address, x_start_next, y_start, x_end, y_end);
     }
 }
 

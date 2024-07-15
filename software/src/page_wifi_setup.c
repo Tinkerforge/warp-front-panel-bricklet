@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "st7789.h"
+#include "display.h"
 #include "qrcode.h"
 
 #include "bricklib2/os/coop_task.h"
@@ -43,14 +44,14 @@ void page_wifi_setup_task_draw_qrcode(char *str, uint16_t x_start, uint16_t y_st
     uint8_t data[qrcode_getBufferSize(4)]; // 137 byte, 33x33
     uint16_t pixel_white[pixel_size*pixel_size];
     uint16_t pixel_black[pixel_size*pixel_size];
-	st7789_fill_u16(ST7789_COLOR_WHITE, pixel_white, pixel_size*pixel_size);
-	st7789_fill_u16(ST7789_COLOR_BLACK, pixel_black, pixel_size*pixel_size);
+    display_fill_u16(ST7789_COLOR_WHITE, pixel_white, pixel_size*pixel_size);
+    display_fill_u16(ST7789_COLOR_BLACK, pixel_black, pixel_size*pixel_size);
 
     qrcode_initText(&qrcode, data, 4, 1, str);
 
     for(uint8_t y = 0; y < qrcode.size; y++) {
         for(uint8_t x = 0; x < qrcode.size; x++) {
-            st7789_task_draw_image(
+            display_task_draw_image(
                 qrcode_getModule(&qrcode, x, y) ? pixel_black : pixel_white,
                 x_start + x*pixel_size,
                 y_start + y*pixel_size,
@@ -63,23 +64,23 @@ void page_wifi_setup_task_draw_qrcode(char *str, uint16_t x_start, uint16_t y_st
 }
 
 void page_wifi_setup_init(void) {
-	memset(&page_wifi_setup, 0, sizeof(PageWifiSetup));
+    memset(&page_wifi_setup, 0, sizeof(PageWifiSetup));
 }
 
 void page_wifi_setup_task_tick(void) {
-	if(page_wifi_setup.redraw_everything) {
-		page_wifi_setup.redraw_background = true;
-		page_wifi_setup.redraw_qrcode = true;
-		page_wifi_setup.redraw_everything = false;
-	}
+    if(page_wifi_setup.redraw_everything) {
+        page_wifi_setup.redraw_background = true;
+        page_wifi_setup.redraw_qrcode = true;
+        page_wifi_setup.redraw_everything = false;
+    }
 
-	if(page_wifi_setup.redraw_background) {
-		st7789_task_draw_background();
-		page_wifi_setup.redraw_background = false;
-	}
+    if(page_wifi_setup.redraw_background) {
+        display_task_draw_background();
+        page_wifi_setup.redraw_background = false;
+    }
 
-	if(page_wifi_setup.redraw_qrcode) {
-		page_wifi_setup_task_draw_qrcode("Test", 100, 100, 3);
-		page_wifi_setup.redraw_qrcode = false;
-	}
+    if(page_wifi_setup.redraw_qrcode) {
+        page_wifi_setup_task_draw_qrcode("Test", 100, 100, 3);
+        page_wifi_setup.redraw_qrcode = false;
+    }
 }
