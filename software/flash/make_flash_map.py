@@ -42,7 +42,7 @@ while True:
         pixel_values_565.append(rgb565)
         pixel_values_565_8bit.append(rgb565 & 0xFF)
         pixel_values_565_8bit.append(rgb565 >> 8)
-    font_list_h    += '{0}, // {1}\n'.format(position, defines.FONTS[count])
+    font_list_h    += '{{{0}, {1}, {2}}}, // {3}\n'.format(position, width, height//128, defines.FONTS[count])
     font_defines_h += '#define FONT_{0} {1}\n'.format(defines.FONTS[count], count)
     print(' define:   {0}'.format(defines.FONTS[count]))
     print(' position: {0}'.format(position))
