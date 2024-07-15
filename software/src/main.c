@@ -37,6 +37,8 @@
 #include "sprite.h"
 #include "page_front.h"
 #include "page_wifi_setup.h"
+#include "status_bar.h"
+#include "display.h"
 
 int main(void) {
 	logging_init();
@@ -51,6 +53,8 @@ int main(void) {
 	sprite_init();
 	page_front_init();
 	page_wifi_setup_init();
+	status_bar_init();
+	display_init();
 
 	while(true) {
 		bootloader_tick();

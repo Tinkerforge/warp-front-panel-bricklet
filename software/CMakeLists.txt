@@ -39,6 +39,7 @@ SET(SOURCES
 	"${PROJECT_SOURCE_DIR}/src/sprite.c"
 	"${PROJECT_SOURCE_DIR}/src/page_front.c"
 	"${PROJECT_SOURCE_DIR}/src/page_wifi_setup.c"
+	"${PROJECT_SOURCE_DIR}/src/status_bar.c"
 	"${PROJECT_SOURCE_DIR}/src/display.c"
 	"${PROJECT_SOURCE_DIR}/src/qrcode/qrcode.c"
 
