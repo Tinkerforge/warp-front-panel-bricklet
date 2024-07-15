@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #############################################################
-# This file was automatically generated on 2024-07-01.      #
+# This file was automatically generated on 2024-07-15.      #
 #                                                           #
 # Python Bindings Version 2.1.31                            #
 #                                                           #
@@ -23,6 +23,8 @@ except (ValueError, ImportError):
 
 GetFlashIndex = namedtuple('FlashIndex', ['page_index', 'sub_page_index'])
 SetFlashData = namedtuple('SetFlashData', ['next_page_index', 'next_sub_page_index', 'status'])
+GetStatusBar = namedtuple('StatusBar', ['ethernet_status', 'wifi_status', 'hours', 'minutes', 'seconds'])
+GetDisplayFrontPageIcon = namedtuple('DisplayFrontPageIcon', ['active', 'sprite_index', 'text_1', 'font_index_1', 'text_2', 'font_index_2'])
 GetSPITFPErrorCount = namedtuple('SPITFPErrorCount', ['error_count_ack_checksum', 'error_count_message_checksum', 'error_count_frame', 'error_count_overflow'])
 GetIdentity = namedtuple('Identity', ['uid', 'connected_uid', 'position', 'hardware_version', 'firmware_version', 'device_identifier'])
 
@@ -42,6 +44,12 @@ class BrickletWARPFrontPanel(Device):
     FUNCTION_SET_FLASH_DATA = 3
     FUNCTION_ERASE_FLASH_SECTOR = 4
     FUNCTION_ERASE_FLASH = 5
+    FUNCTION_SET_STATUS_BAR = 6
+    FUNCTION_GET_STATUS_BAR = 7
+    FUNCTION_SET_DISPLAY_PAGE_INDEX = 8
+    FUNCTION_GET_DISPLAY_PAGE_INDEX = 9
+    FUNCTION_SET_DISPLAY_FRONT_PAGE_ICON = 10
+    FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON = 11
     FUNCTION_GET_SPITFP_ERROR_COUNT = 234
     FUNCTION_SET_BOOTLOADER_MODE = 235
     FUNCTION_GET_BOOTLOADER_MODE = 236
@@ -87,6 +95,12 @@ class BrickletWARPFrontPanel(Device):
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_FLASH_DATA] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH_SECTOR] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_STATUS_BAR] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_STATUS_BAR] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_PAGE_INDEX] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_PAGE_INDEX] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_FRONT_PAGE_ICON] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_SPITFP_ERROR_COUNT] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -149,6 +163,72 @@ class BrickletWARPFrontPanel(Device):
         self.check_validity()
 
         return self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_ERASE_FLASH, (), '', 9, 'B')
+
+    def set_status_bar(self, ethernet_status, wifi_status, hours, minutes, seconds):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        ethernet_status = int(ethernet_status)
+        wifi_status = int(wifi_status)
+        hours = int(hours)
+        minutes = int(minutes)
+        seconds = int(seconds)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_STATUS_BAR, (ethernet_status, wifi_status, hours, minutes, seconds), 'I I B B B', 0, '')
+
+    def get_status_bar(self):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        return GetStatusBar(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_STATUS_BAR, (), '', 19, 'I I B B B'))
+
+    def set_display_page_index(self, page_index):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        page_index = int(page_index)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_PAGE_INDEX, (page_index,), 'I', 0, '')
+
+    def get_display_page_index(self):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_PAGE_INDEX, (), '', 12, 'I')
+
+    def set_display_front_page_icon(self, icon_index, active, sprite_index, text_1, font_index_1, text_2, font_index_2):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        icon_index = int(icon_index)
+        active = bool(active)
+        sprite_index = int(sprite_index)
+        text_1 = create_char_list(text_1)
+        font_index_1 = int(font_index_1)
+        text_2 = create_char_list(text_2)
+        font_index_2 = int(font_index_2)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_FRONT_PAGE_ICON, (icon_index, active, sprite_index, text_1, font_index_1, text_2, font_index_2), 'I ! I 10c B 10c B', 0, '')
+
+    def get_display_front_page_icon(self, icon_index):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        icon_index = int(icon_index)
+
+        return GetDisplayFrontPageIcon(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON, (icon_index,), 'I', 35, '! I 10c B 10c B'))
 
     def get_spitfp_error_count(self):
         r"""
