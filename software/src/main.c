@@ -41,27 +41,27 @@
 #include "display.h"
 
 int main(void) {
-	logging_init();
-	logd("Start WARP Front Panel Bricklet\n\r");
+    logging_init();
+    logd("Start WARP Front Panel Bricklet\n\r");
 
-	communication_init();
-	st7789_init();
-	by25q_init();
-	button_init();
-	psram_init();
-	font_init();
-	sprite_init();
-	page_front_init();
-	page_wifi_setup_init();
-	status_bar_init();
-	display_init();
+    communication_init();
+    st7789_init();
+    by25q_init();
+    button_init();
+    psram_init();
+    font_init();
+    sprite_init();
+    page_front_init();
+    page_wifi_setup_init();
+    status_bar_init();
+    display_init();
 
-	while(true) {
-		bootloader_tick();
-		communication_tick();
-		st7789_tick();
-		by25q_tick();
-		button_tick();
-		psram_tick();
-	}
+    while(true) {
+        bootloader_tick();
+        communication_tick();
+        st7789_tick();
+        by25q_tick();
+        button_tick();
+        psram_tick();
+    }
 }

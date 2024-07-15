@@ -71,112 +71,112 @@ void communication_init(void);
 
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t page_index;
-	uint8_t sub_page_index;
+    TFPMessageHeader header;
+    uint32_t page_index;
+    uint8_t sub_page_index;
 } __attribute__((__packed__)) SetFlashIndex;
 
 typedef struct {
-	TFPMessageHeader header;
+    TFPMessageHeader header;
 } __attribute__((__packed__)) GetFlashIndex;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t page_index;
-	uint8_t sub_page_index;
+    TFPMessageHeader header;
+    uint32_t page_index;
+    uint8_t sub_page_index;
 } __attribute__((__packed__)) GetFlashIndex_Response;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint8_t data[64];
+    TFPMessageHeader header;
+    uint8_t data[64];
 } __attribute__((__packed__)) SetFlashData;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t next_page_index;
-	uint8_t next_sub_page_index;
-	uint8_t status;
+    TFPMessageHeader header;
+    uint32_t next_page_index;
+    uint8_t next_sub_page_index;
+    uint8_t status;
 } __attribute__((__packed__)) SetFlashData_Response;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint16_t sector_index;
+    TFPMessageHeader header;
+    uint16_t sector_index;
 } __attribute__((__packed__)) EraseFlashSector;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint8_t status;
+    TFPMessageHeader header;
+    uint8_t status;
 } __attribute__((__packed__)) EraseFlashSector_Response;
 
 typedef struct {
-	TFPMessageHeader header;
+    TFPMessageHeader header;
 } __attribute__((__packed__)) EraseFlash;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint8_t status;
+    TFPMessageHeader header;
+    uint8_t status;
 } __attribute__((__packed__)) EraseFlash_Response;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t ethernet_status;
-	uint32_t wifi_status;
-	uint8_t hours;
-	uint8_t minutes;
-	uint8_t seconds;
+    TFPMessageHeader header;
+    uint32_t ethernet_status;
+    uint32_t wifi_status;
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
 } __attribute__((__packed__)) SetStatusBar;
 
 typedef struct {
-	TFPMessageHeader header;
+    TFPMessageHeader header;
 } __attribute__((__packed__)) GetStatusBar;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t ethernet_status;
-	uint32_t wifi_status;
-	uint8_t hours;
-	uint8_t minutes;
-	uint8_t seconds;
+    TFPMessageHeader header;
+    uint32_t ethernet_status;
+    uint32_t wifi_status;
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
 } __attribute__((__packed__)) GetStatusBar_Response;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t page_index;
+    TFPMessageHeader header;
+    uint32_t page_index;
 } __attribute__((__packed__)) SetDisplayPageIndex;
 
 typedef struct {
-	TFPMessageHeader header;
+    TFPMessageHeader header;
 } __attribute__((__packed__)) GetDisplayPageIndex;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t page_index;
+    TFPMessageHeader header;
+    uint32_t page_index;
 } __attribute__((__packed__)) GetDisplayPageIndex_Response;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t icon_index;
-	bool active;
-	uint32_t sprite_index;
-	char text_1[10];
-	uint8_t font_index_1;
-	char text_2[10];
-	uint8_t font_index_2;
+    TFPMessageHeader header;
+    uint32_t icon_index;
+    bool active;
+    uint32_t sprite_index;
+    char text_1[10];
+    uint8_t font_index_1;
+    char text_2[10];
+    uint8_t font_index_2;
 } __attribute__((__packed__)) SetDisplayFrontPageIcon;
 
 typedef struct {
-	TFPMessageHeader header;
-	uint32_t icon_index;
+    TFPMessageHeader header;
+    uint32_t icon_index;
 } __attribute__((__packed__)) GetDisplayFrontPageIcon;
 
 typedef struct {
-	TFPMessageHeader header;
-	bool active;
-	uint32_t sprite_index;
-	char text_1[10];
-	uint8_t font_index_1;
-	char text_2[10];
-	uint8_t font_index_2;
+    TFPMessageHeader header;
+    bool active;
+    uint32_t sprite_index;
+    char text_1[10];
+    uint8_t font_index_1;
+    char text_2[10];
+    uint8_t font_index_2;
 } __attribute__((__packed__)) GetDisplayFrontPageIcon_Response;
 
 

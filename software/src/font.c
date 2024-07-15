@@ -43,7 +43,7 @@ void font_task_draw_string(const char *str, const uint8_t str_length, const uint
 }
 
 void font_init(void) {
-	memset(&font, 0, sizeof(Font));
+    memset(&font, 0, sizeof(Font));
 }
 
 void font_tick(void) {

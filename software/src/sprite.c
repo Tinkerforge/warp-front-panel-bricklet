@@ -42,7 +42,7 @@ void sprite_task_draw(const uint8_t index, const uint16_t x_start, const uint16_
 }
 
 void sprite_init(void) {
-	memset(&sprite, 0, sizeof(Sprite));
+    memset(&sprite, 0, sizeof(Sprite));
 }
 
 void sprite_tick(void) {

@@ -34,10 +34,10 @@
 #define SPI_TRANSCEIVE_OPTION_NO_SELECT   4
 
 typedef struct {
-	uint8_t data[SPI_BUFFER_SIZE];
-	uint16_t data_length;
+    uint8_t data[SPI_BUFFER_SIZE];
+    uint16_t data_length;
 
-	bool tranceive_ongoing;
+    bool tranceive_ongoing;
 } SPI;
 
 extern SPI spi;

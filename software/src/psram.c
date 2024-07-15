@@ -29,14 +29,14 @@
 PSRAM psram;
 
 void psram_init(void) {
-	memset(&psram, 0, sizeof(PSRAM));
+    memset(&psram, 0, sizeof(PSRAM));
 
-	const XMC_GPIO_CONFIG_t pin_config_output_high = {
-		.mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
-		.output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
-	};
+    const XMC_GPIO_CONFIG_t pin_config_output_high = {
+        .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+        .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
+    };
 
-	XMC_GPIO_Init(PSRAM_SELECT_PIN, &pin_config_output_high);
+    XMC_GPIO_Init(PSRAM_SELECT_PIN, &pin_config_output_high);
 }
 
 void psram_tick(void) {

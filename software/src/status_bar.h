@@ -35,10 +35,10 @@ typedef struct {
     uint16_t background_color;
 
     uint32_t ethernet_status;
-	uint32_t wifi_status;
-	uint8_t hours;
-	uint8_t minutes;
-	uint8_t seconds;
+    uint32_t wifi_status;
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
 } StatusBar;
 
 extern StatusBar status_bar;

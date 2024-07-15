@@ -39,91 +39,91 @@
 Display display;
 
 void display_init(void) {
-	memset(&display, 0, sizeof(Display));
+    memset(&display, 0, sizeof(Display));
 }
 
 void display_fill_u16(const uint16_t color, uint16_t *data, const uint16_t length) {
-	for(uint16_t i = 0; i < length; i++) {
-		data[i] = color;
-	}
+    for(uint16_t i = 0; i < length; i++) {
+        data[i] = color;
+    }
 }
 
 
 void display_fill_circle(const uint16_t color, uint16_t *data, const uint16_t length) {
-	for(int row = 0; row < length; row++) {
-		for(int col = 0; col < length; col++) {
-			int x = col - length/2;
-			int y = length/2 - row;
-			int sumsq = x*x + y*y;
+    for(int row = 0; row < length; row++) {
+        for(int col = 0; col < length; col++) {
+            int x = col - length/2;
+            int y = length/2 - row;
+            int sumsq = x*x + y*y;
 
-			if((sumsq > 95) && (sumsq < 105)) {
-				data[col*length + row] = color;
-			}
-		}
-	}
+            if((sumsq > 95) && (sumsq < 105)) {
+                data[col*length + row] = color;
+            }
+        }
+    }
 }
 
 void display_task_draw_filled_rect(const uint16_t color, const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
-	uint16_t data[100];
-	display_fill_u16(color, data, 100);
-	st7789_set_window(x_start, y_start, x_end, y_end);
+    uint16_t data[100];
+    display_fill_u16(color, data, 100);
+    st7789_set_window(x_start, y_start, x_end, y_end);
 
-	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
-	while(length > 0) {
-		uint16_t length_write = MIN(100, length);
-		st7789_task_write_display(data, length_write);
-		length -= length_write;
-	}
+    uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
+    while(length > 0) {
+        uint16_t length_write = MIN(100, length);
+        st7789_task_write_display(data, length_write);
+        length -= length_write;
+    }
 }
 
 void display_task_draw_image(uint16_t *image, const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
-	st7789_set_window(x_start, y_start, x_end, y_end);
+    st7789_set_window(x_start, y_start, x_end, y_end);
 
-	uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
-	while(length > 0) {
-		uint16_t length_write = MIN(100, length);
-		st7789_task_write_display(image, length_write);
-		image += length_write;
-		length -= length_write;
-	}
+    uint32_t length = (x_end - x_start + 1)*(y_end-y_start+1);
+    while(length > 0) {
+        uint16_t length_write = MIN(100, length);
+        st7789_task_write_display(image, length_write);
+        image += length_write;
+        length -= length_write;
+    }
 }
 
 void display_task_draw_from_by25q(const uint32_t address_start, const uint16_t x_start, const uint16_t y_start, const uint16_t x_end, const uint16_t y_end) {
-	st7789_set_window(x_start, y_start, x_end, y_end);
+    st7789_set_window(x_start, y_start, x_end, y_end);
 
-	// window length for 8bit data
-	uint32_t window_length = (x_end - x_start + 1)*(y_end-y_start+1)*sizeof(uint16_t);
-	uint32_t address = address_start;
-	uint8_t data[BY25Q_PAGE_SIZE] = {0};
-	while(window_length > 0) {
-		uint16_t length = MIN(BY25Q_PAGE_SIZE, window_length);
-		by25q_task_read(data, length, address);
-		st7789_task_write_display((uint16_t*)data, length/sizeof(uint16_t));
-		window_length -= length;
-		address       += length;
-	}
+    // window length for 8bit data
+    uint32_t window_length = (x_end - x_start + 1)*(y_end-y_start+1)*sizeof(uint16_t);
+    uint32_t address = address_start;
+    uint8_t data[BY25Q_PAGE_SIZE] = {0};
+    while(window_length > 0) {
+        uint16_t length = MIN(BY25Q_PAGE_SIZE, window_length);
+        by25q_task_read(data, length, address);
+        st7789_task_write_display((uint16_t*)data, length/sizeof(uint16_t));
+        window_length -= length;
+        address       += length;
+    }
 }
 
 void display_task_draw_background(void) {
-	display_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
+    display_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
 }
 
 void display_task_tick(void) {
-	uint8_t new_index = button.index % 2;
-	bool redraw_everything = new_index != display.last_index;
-	display.last_index = new_index;
-	switch(new_index) {
-		default:
-		case 0: {
-			page_front.redraw_everything = redraw_everything;
-			page_front_task_tick();
-			break;
-		}
+    uint8_t new_index = button.index % 2;
+    bool redraw_everything = new_index != display.last_index;
+    display.last_index = new_index;
+    switch(new_index) {
+        default:
+        case 0: {
+            page_front.redraw_everything = redraw_everything;
+            page_front_task_tick();
+            break;
+        }
 
-		case 1: {
-			page_wifi_setup.redraw_everything = redraw_everything;
-			page_wifi_setup_task_tick();
-			break;
-		}
-	}
+        case 1: {
+            page_wifi_setup.redraw_everything = redraw_everything;
+            page_wifi_setup_task_tick();
+            break;
+        }
+    }
 }

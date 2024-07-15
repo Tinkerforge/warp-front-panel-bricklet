@@ -31,46 +31,46 @@
 StatusBar status_bar;
 
 void status_bar_init(void) {
-	memset(&status_bar, 0, sizeof(StatusBar));
+    memset(&status_bar, 0, sizeof(StatusBar));
 
-	// Redraw status bar on startup
-	status_bar.redraw_everything = true;
+    // Redraw status bar on startup
+    status_bar.redraw_everything = true;
 }
 
 void status_bar_task_tick(void) {
-	if(status_bar.redraw_everything) {
-		status_bar.redraw_background = true;
-		status_bar.redraw_wifi       = true;
-		status_bar.redraw_ethernet   = true;
-		status_bar.redraw_clock      = true;
-		status_bar.redraw_everything = false;
-	}
+    if(status_bar.redraw_everything) {
+        status_bar.redraw_background = true;
+        status_bar.redraw_wifi       = true;
+        status_bar.redraw_ethernet   = true;
+        status_bar.redraw_clock      = true;
+        status_bar.redraw_everything = false;
+    }
 
-	if(status_bar.redraw_background) {
-		display_task_draw_filled_rect(status_bar.background_color, 0, 0, 319, 29);
-		status_bar.redraw_background = false;
-	}
+    if(status_bar.redraw_background) {
+        display_task_draw_filled_rect(status_bar.background_color, 0, 0, 319, 29);
+        status_bar.redraw_background = false;
+    }
 
-	if(status_bar.redraw_wifi) {
-		sprite_task_draw(SPRITE_STATUS_ICON_WIFI, 5, 0);
-		status_bar.redraw_wifi = false;
-	}
+    if(status_bar.redraw_wifi) {
+        sprite_task_draw(SPRITE_STATUS_ICON_WIFI, 5, 0);
+        status_bar.redraw_wifi = false;
+    }
 
-	if(status_bar.redraw_ethernet) {
-		sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, 5 + sprite_list[SPRITE_STATUS_ICON_WIFI].width, 0);
-		status_bar.redraw_ethernet = false;
-	}
+    if(status_bar.redraw_ethernet) {
+        sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, 5 + sprite_list[SPRITE_STATUS_ICON_WIFI].width, 0);
+        status_bar.redraw_ethernet = false;
+    }
 
-	if(status_bar.redraw_clock) {
-		char clock[9] = "00:00:00";
-		clock[0] += status_bar.hours   / 10;
-		clock[1] += status_bar.hours   % 10;
-		clock[3] += status_bar.minutes / 10;
-		clock[4] += status_bar.minutes % 10;
-		clock[6] += status_bar.seconds / 10;
-		clock[7] += status_bar.seconds % 10;
+    if(status_bar.redraw_clock) {
+        char clock[9] = "00:00:00";
+        clock[0] += status_bar.hours   / 10;
+        clock[1] += status_bar.hours   % 10;
+        clock[3] += status_bar.minutes / 10;
+        clock[4] += status_bar.minutes % 10;
+        clock[6] += status_bar.seconds / 10;
+        clock[7] += status_bar.seconds % 10;
 
-		font_task_draw_string(clock, 8, 0, 319-font_list[0].width*8-5, (30 - font_list[0].height)/2);
-		status_bar.redraw_clock = false;
-	}
+        font_task_draw_string(clock, 8, 0, 319-font_list[0].width*8-5, (30 - font_list[0].height)/2);
+        status_bar.redraw_clock = false;
+    }
 }
