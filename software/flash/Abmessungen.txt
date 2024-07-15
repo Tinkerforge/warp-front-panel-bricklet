@@ -1,0 +1,14 @@
+Header:
+320x30
+
+Vertical divider:
+2x240
+
+Icon with text:
+159x70
+
+Icon:
+79x70
+
+Text:
+80x70
