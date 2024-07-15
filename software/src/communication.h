@@ -62,6 +62,12 @@ void communication_init(void);
 #define FID_SET_FLASH_DATA 3
 #define FID_ERASE_FLASH_SECTOR 4
 #define FID_ERASE_FLASH 5
+#define FID_SET_STATUS_BAR 6
+#define FID_GET_STATUS_BAR 7
+#define FID_SET_DISPLAY_PAGE_INDEX 8
+#define FID_GET_DISPLAY_PAGE_INDEX 9
+#define FID_SET_DISPLAY_FRONT_PAGE_ICON 10
+#define FID_GET_DISPLAY_FRONT_PAGE_ICON 11
 
 
 typedef struct {
@@ -111,6 +117,68 @@ typedef struct {
 	uint8_t status;
 } __attribute__((__packed__)) EraseFlash_Response;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t ethernet_status;
+	uint32_t wifi_status;
+	uint8_t hours;
+	uint8_t minutes;
+	uint8_t seconds;
+} __attribute__((__packed__)) SetStatusBar;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetStatusBar;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t ethernet_status;
+	uint32_t wifi_status;
+	uint8_t hours;
+	uint8_t minutes;
+	uint8_t seconds;
+} __attribute__((__packed__)) GetStatusBar_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t page_index;
+} __attribute__((__packed__)) SetDisplayPageIndex;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetDisplayPageIndex;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t page_index;
+} __attribute__((__packed__)) GetDisplayPageIndex_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t icon_index;
+	bool active;
+	uint32_t sprite_index;
+	char text_1[10];
+	uint8_t font_index_1;
+	char text_2[10];
+	uint8_t font_index_2;
+} __attribute__((__packed__)) SetDisplayFrontPageIcon;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t icon_index;
+} __attribute__((__packed__)) GetDisplayFrontPageIcon;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool active;
+	uint32_t sprite_index;
+	char text_1[10];
+	uint8_t font_index_1;
+	char text_2[10];
+	uint8_t font_index_2;
+} __attribute__((__packed__)) GetDisplayFrontPageIcon_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -118,6 +186,12 @@ BootloaderHandleMessageResponse get_flash_index(const GetFlashIndex *data, GetFl
 BootloaderHandleMessageResponse set_flash_data(const SetFlashData *data, SetFlashData_Response *response);
 BootloaderHandleMessageResponse erase_flash_sector(const EraseFlashSector *data, EraseFlashSector_Response *response);
 BootloaderHandleMessageResponse erase_flash(const EraseFlash *data, EraseFlash_Response *response);
+BootloaderHandleMessageResponse set_status_bar(const SetStatusBar *data);
+BootloaderHandleMessageResponse get_status_bar(const GetStatusBar *data, GetStatusBar_Response *response);
+BootloaderHandleMessageResponse set_display_page_index(const SetDisplayPageIndex *data);
+BootloaderHandleMessageResponse get_display_page_index(const GetDisplayPageIndex *data, GetDisplayPageIndex_Response *response);
+BootloaderHandleMessageResponse set_display_front_page_icon(const SetDisplayFrontPageIcon *data);
+BootloaderHandleMessageResponse get_display_front_page_icon(const GetDisplayFrontPageIcon *data, GetDisplayFrontPageIcon_Response *response);
 
 // Callbacks
 
