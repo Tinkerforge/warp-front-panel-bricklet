@@ -115,13 +115,17 @@ void display_task_tick(void) {
     switch(new_index) {
         default:
         case 0: {
-            page_front.redraw_everything = redraw_everything;
+            if(!page_front.redraw_everything) {
+                page_front.redraw_everything = redraw_everything;
+            }
             page_front_task_tick();
             break;
         }
 
         case 1: {
-            page_wifi_setup.redraw_everything = redraw_everything;
+            if(!page_wifi_setup.redraw_everything) {
+                page_wifi_setup.redraw_everything = redraw_everything;
+            }
             page_wifi_setup_task_tick();
             break;
         }

@@ -28,6 +28,8 @@
 #include "sprite.h"
 #include "font.h"
 
+#define STATUS_BAR_FONT 8
+
 StatusBar status_bar;
 
 void status_bar_init(void) {
@@ -70,7 +72,7 @@ void status_bar_task_tick(void) {
         clock[6] += status_bar.seconds / 10;
         clock[7] += status_bar.seconds % 10;
 
-        font_task_draw_string(clock, 8, 0, 319-font_list[0].width*8-5, (30 - font_list[0].height)/2);
+        font_task_draw_string(clock, 8, STATUS_BAR_FONT, 319-font_list[STATUS_BAR_FONT].width*8-5, (30 - font_list[STATUS_BAR_FONT].height)/2);
         status_bar.redraw_clock = false;
     }
 }
