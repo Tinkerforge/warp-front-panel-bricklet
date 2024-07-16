@@ -30,6 +30,7 @@
 #include "display.h"
 #include "status_bar.h"
 #include "page_front.h"
+#include "page_wifi_setup.h"
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
     const uint8_t length = ((TFPMessageHeader*)message)->length;
@@ -45,6 +46,10 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_GET_DISPLAY_PAGE_INDEX:      return length != sizeof(GetDisplayPageIndex)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_page_index(message, response);
         case FID_SET_DISPLAY_FRONT_PAGE_ICON: return length != sizeof(SetDisplayFrontPageIcon) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_front_page_icon(message);
         case FID_GET_DISPLAY_FRONT_PAGE_ICON: return length != sizeof(GetDisplayFrontPageIcon) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_front_page_icon(message, response);
+        case FID_SET_DISPLAY_WIFI_SETUP_1:    return length != sizeof(SetDisplayWifiSetup1)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_wifi_setup_1(message);
+        case FID_GET_DISPLAY_WIFI_SETUP_1:    return length != sizeof(GetDisplayWifiSetup1)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_1(message, response);
+        case FID_SET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(SetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_wifi_setup_2(message);
+        case FID_GET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(GetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_2(message, response);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -208,6 +213,37 @@ BootloaderHandleMessageResponse get_display_front_page_icon(const GetDisplayFron
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
+BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSetup1 *data) {
+    memcpy(page_wifi_setup.ip_address, data->ip_address, 15);
+    page_wifi_setup.ip_address[15] = '\0';
+
+    memcpy(page_wifi_setup.ssid, data->ssid, 49);
+    page_wifi_setup.ssid[49] = '\0';
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSetup1 *data, GetDisplayWifiSetup1_Response *response) {
+    response->header.length = sizeof(GetDisplayWifiSetup1_Response);
+    memcpy(response->ip_address, page_wifi_setup.ip_address, 15);
+    memcpy(response->ssid, page_wifi_setup.ssid, 49);
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data) {
+    memcpy(page_wifi_setup.password, data->password, 64);
+    page_wifi_setup.password[64] = '\0';
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response) {
+    response->header.length = sizeof(GetDisplayWifiSetup2_Response);
+    memcpy(response->password, page_wifi_setup.password, 49);
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
 
 
 void communication_tick(void) {

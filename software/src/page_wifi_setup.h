@@ -29,6 +29,10 @@ typedef struct {
     bool redraw_everything;
     bool redraw_background;
     bool redraw_qrcode;
+
+    char ip_address[15+1];
+    char ssid[49+1];
+    char password[64+1];
 } PageWifiSetup;
 
 extern PageWifiSetup page_wifi_setup;
