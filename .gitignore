@@ -16,3 +16,6 @@ software/flash/*.h
 software/flash/flash_map.bin
 software/flash/fonts/char_list.txt
 hardware/kicad-libraries
+hardware/fp-info-cache
+hardware/*-backups
+hardware/~*.lck
