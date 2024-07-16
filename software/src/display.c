@@ -35,6 +35,7 @@
 #include "button.h"
 #include "page_front.h"
 #include "page_wifi_setup.h"
+#include "status_bar.h"
 
 Display display;
 
@@ -106,6 +107,7 @@ void display_task_draw_from_by25q(const uint32_t address_start, const uint16_t x
 
 void display_task_draw_background(void) {
     display_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
+    display_task_draw_filled_rect(status_bar.background_color, 159, 0, 160, 239);
 }
 
 void display_task_tick(void) {
