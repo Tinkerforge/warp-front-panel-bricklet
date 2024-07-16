@@ -6,8 +6,8 @@
 	(paper "A4")
 	(title_block
 		(title "WARP Front Panel")
-		(date "2024-06-21")
-		(rev "1.0")
+		(date "2024-07-02")
+		(rev "1.1")
 		(company "Tinkerforge GmbH")
 		(comment 1 "Licensed under CERN OHL v.1.1")
 		(comment 2 "Copyright (©) 2024, B.Nordmeyer <bastian@tinkerforge.com>")
@@ -7831,12 +7831,12 @@
 	(symbol
 		(lib_id "tinkerforge:LED_TACT_SW_THT")
 		(at 108.585 111.76 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "37502b43-f780-4df5-8dff-876f5b3fb0e7")
 		(property "Reference" "SW101"
 			(at 108.585 104.1485 0)
