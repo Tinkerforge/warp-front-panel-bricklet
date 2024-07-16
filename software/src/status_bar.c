@@ -28,8 +28,6 @@
 #include "sprite.h"
 #include "font.h"
 
-#define STATUS_BAR_FONT 8
-
 StatusBar status_bar;
 
 void status_bar_init(void) {
@@ -49,17 +47,17 @@ void status_bar_task_tick(void) {
     }
 
     if(status_bar.redraw_background) {
-        display_task_draw_filled_rect(status_bar.background_color, 0, 0, 319, 29);
+        display_task_draw_filled_rect(status_bar.background_color, STATUS_BAR_START_X, STATUS_BAR_START_Y, STATUS_BAR_END_X, STATUS_BAR_END_Y);
         status_bar.redraw_background = false;
     }
 
     if(status_bar.redraw_wifi) {
-        sprite_task_draw(SPRITE_STATUS_ICON_WIFI, 5, 0);
+        sprite_task_draw(SPRITE_STATUS_ICON_WIFI, STATUS_BAR_ICON_LEFT_MARGIN, STATUS_BAR_START_Y);
         status_bar.redraw_wifi = false;
     }
 
     if(status_bar.redraw_ethernet) {
-        sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, 5 + sprite_list[SPRITE_STATUS_ICON_WIFI].width, 0);
+        sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, STATUS_BAR_ICON_LEFT_MARGIN + sprite_list[SPRITE_STATUS_ICON_WIFI].width, STATUS_BAR_START_Y);
         status_bar.redraw_ethernet = false;
     }
 
@@ -72,7 +70,13 @@ void status_bar_task_tick(void) {
         clock[6] += status_bar.seconds / 10;
         clock[7] += status_bar.seconds % 10;
 
-        font_task_draw_string(clock, 8, STATUS_BAR_FONT, 319-font_list[STATUS_BAR_FONT].width*8-5, (30 - font_list[STATUS_BAR_FONT].height)/2);
+        font_task_draw_string(
+            clock,
+            STATUS_BAR_CLOCK_CHARS,
+            STATUS_BAR_FONT_INDEX,
+            STATUS_BAR_END_X - font_list[STATUS_BAR_FONT_INDEX].width*STATUS_BAR_CLOCK_CHARS - STATUS_BAR_ICON_RIGHT_MARGIN,
+            (STATUS_BAR_HEIGHT - font_list[STATUS_BAR_FONT_INDEX].height)/2
+        );
         status_bar.redraw_clock = false;
     }
 }
