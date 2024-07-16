@@ -25,6 +25,17 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "st7789.h"
+
+#define PAGE_FRONT_INDEX_LEFT_TOP     0
+#define PAGE_FRONT_INDEX_LEFT_MID     1
+#define PAGE_FRONT_INDEX_LEFT_BOTTOM  2
+#define PAGE_FRONT_INDEX_RIGHT_TOP    3
+#define PAGE_FRONT_INDEX_RIGHT_MID    4
+#define PAGE_FRONT_INDEX_RIGHT_BOTTOM 5
+
+#define PAGE_FRONT_BACKGROUND_COLOR   ST7789_COLOR_BLACK
+
 typedef struct {
     uint16_t icon_x;
     uint16_t icon_y;
@@ -35,7 +46,10 @@ typedef struct {
 } PageFrontIconPosition;
 
 typedef struct {
-    bool redraw;
+    bool redraw_everything;
+    bool redraw_sprite;
+    bool redraw_text_1;
+    bool redraw_text_2;
     bool active;
     uint32_t sprite_index;
     char text_1[10];

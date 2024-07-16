@@ -135,7 +135,7 @@ BootloaderHandleMessageResponse set_status_bar(const SetStatusBar *data) {
     if((status_bar.hours != data->hours) || (status_bar.minutes != data->minutes) || (status_bar.hours != data->minutes)) {
         status_bar.hours        = data->hours;
         status_bar.minutes      = data->minutes;
-        status_bar.seconds      = data->seconds;	
+        status_bar.seconds      = data->seconds;
         status_bar.redraw_clock = true;
     }
 
@@ -169,15 +169,24 @@ BootloaderHandleMessageResponse set_display_front_page_icon(const SetDisplayFron
         return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
     }
 
-    page_front_icon_list[data->icon_index].active       = data->active;
-    page_front_icon_list[data->icon_index].sprite_index = data->sprite_index;
-    page_front_icon_list[data->icon_index].font_index_1 = data->font_index_1;
-    page_front_icon_list[data->icon_index].font_index_2 = data->font_index_2;
-    memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, 10);
-    memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, 10);
-
-    // TODO: Check if redraw necessary
-    page_front_icon_list[data->icon_index].redraw = true;
+    if(page_front_icon_list[data->icon_index].active != data->active) {
+        page_front_icon_list[data->icon_index].active = data->active;
+        page_front_icon_list[data->icon_index].redraw_everything = true;
+    }
+    if(page_front_icon_list[data->icon_index].sprite_index != data->sprite_index) {
+        page_front_icon_list[data->icon_index].sprite_index = data->sprite_index;
+        page_front_icon_list[data->icon_index].redraw_sprite = true;
+    }
+    if((page_front_icon_list[data->icon_index].font_index_1 != data->font_index_1) || (memcmp(page_front_icon_list[data->icon_index].text_1, data->text_1, 10) != 0)) {
+        page_front_icon_list[data->icon_index].font_index_1 = data->font_index_1;
+        memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, 10);
+        page_front_icon_list[data->icon_index].redraw_text_1 = true;
+    }
+    if((page_front_icon_list[data->icon_index].font_index_2 != data->font_index_2) || (memcmp(page_front_icon_list[data->icon_index].text_2, data->text_2, 10) != 0)) {
+        page_front_icon_list[data->icon_index].font_index_2 = data->font_index_2;
+        memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, 10);
+        page_front_icon_list[data->icon_index].redraw_text_2 = true;
+    }
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
