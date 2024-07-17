@@ -106,8 +106,8 @@ void display_task_draw_from_by25q(const uint32_t address_start, const uint16_t x
 }
 
 void display_task_draw_background(void) {
-    display_task_draw_filled_rect(ST7789_COLOR_BLACK, 0, 30, 319, 239);
-    display_task_draw_filled_rect(status_bar.background_color, 159, 0, 160, 239);
+    display_task_draw_filled_rect(DISPLAY_BACKGROUND_COLOR, DISPLAY_START_X, STATUS_BAR_HEIGHT, DISPLAY_END_X, DISPLAY_END_Y);
+//    display_task_draw_filled_rect(status_bar.background_color, DISPLAY_WIDTH/2-1, DISPLAY_START_Y, DISPLAY_WIDTH/2, DISPLAY_END_Y);
 }
 
 void display_task_tick(void) {

@@ -24,6 +24,16 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "st7789.h"
+
+#define DISPLAY_BACKGROUND_COLOR  ST7789_COLOR_BLACK
+#define DISPLAY_WIDTH             320
+#define DISPLAY_HEIGHT            240
+#define DISPLAY_START_X           0
+#define DISPLAY_START_Y           0
+#define DISPLAY_END_X             (DISPLAY_WIDTH-1)
+#define DISPLAY_END_Y             (DISPLAY_HEIGHT-1)
+
 
 typedef struct {
     uint8_t last_index;
