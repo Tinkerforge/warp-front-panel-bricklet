@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #############################################################
-# This file was automatically generated on 2024-07-15.      #
+# This file was automatically generated on 2024-07-17.      #
 #                                                           #
 # Python Bindings Version 2.1.31                            #
 #                                                           #
@@ -25,6 +25,7 @@ GetFlashIndex = namedtuple('FlashIndex', ['page_index', 'sub_page_index'])
 SetFlashData = namedtuple('SetFlashData', ['next_page_index', 'next_sub_page_index', 'status'])
 GetStatusBar = namedtuple('StatusBar', ['ethernet_status', 'wifi_status', 'hours', 'minutes', 'seconds'])
 GetDisplayFrontPageIcon = namedtuple('DisplayFrontPageIcon', ['active', 'sprite_index', 'text_1', 'font_index_1', 'text_2', 'font_index_2'])
+GetDisplayWifiSetup1 = namedtuple('DisplayWifiSetup1', ['ip_address', 'ssid'])
 GetSPITFPErrorCount = namedtuple('SPITFPErrorCount', ['error_count_ack_checksum', 'error_count_message_checksum', 'error_count_frame', 'error_count_overflow'])
 GetIdentity = namedtuple('Identity', ['uid', 'connected_uid', 'position', 'hardware_version', 'firmware_version', 'device_identifier'])
 
@@ -50,6 +51,10 @@ class BrickletWARPFrontPanel(Device):
     FUNCTION_GET_DISPLAY_PAGE_INDEX = 9
     FUNCTION_SET_DISPLAY_FRONT_PAGE_ICON = 10
     FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON = 11
+    FUNCTION_SET_DISPLAY_WIFI_SETUP_1 = 12
+    FUNCTION_GET_DISPLAY_WIFI_SETUP_1 = 13
+    FUNCTION_SET_DISPLAY_WIFI_SETUP_2 = 14
+    FUNCTION_GET_DISPLAY_WIFI_SETUP_2 = 15
     FUNCTION_GET_SPITFP_ERROR_COUNT = 234
     FUNCTION_SET_BOOTLOADER_MODE = 235
     FUNCTION_GET_BOOTLOADER_MODE = 236
@@ -101,6 +106,10 @@ class BrickletWARPFrontPanel(Device):
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_PAGE_INDEX] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_FRONT_PAGE_ICON] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_WIFI_SETUP_1] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_WIFI_SETUP_1] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_WIFI_SETUP_2] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_WIFI_SETUP_2] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_SPITFP_ERROR_COUNT] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -229,6 +238,43 @@ class BrickletWARPFrontPanel(Device):
         icon_index = int(icon_index)
 
         return GetDisplayFrontPageIcon(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_FRONT_PAGE_ICON, (icon_index,), 'I', 35, '! I 10c B 10c B'))
+
+    def set_display_wifi_setup_1(self, ip_address, ssid):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        ip_address = create_char_list(ip_address)
+        ssid = create_char_list(ssid)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_WIFI_SETUP_1, (ip_address, ssid), '15c 49c', 0, '')
+
+    def get_display_wifi_setup_1(self):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        return GetDisplayWifiSetup1(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_WIFI_SETUP_1, (), '', 72, '15c 49c'))
+
+    def set_display_wifi_setup_2(self, password):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        password = create_char_list(password)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY_WIFI_SETUP_2, (password,), '64c', 0, '')
+
+    def get_display_wifi_setup_2(self):
+        r"""
+        TODO
+        """
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_WIFI_SETUP_2, (), '', 72, '64c')
 
     def get_spitfp_error_count(self):
         r"""

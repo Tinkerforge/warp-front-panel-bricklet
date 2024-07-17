@@ -220,6 +220,9 @@ BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSet
     memcpy(page_wifi_setup.ssid, data->ssid, 49);
     page_wifi_setup.ssid[49] = '\0';
 
+    // On WIFI changes just redraw everything. This will not change often.
+    page_wifi_setup.redraw_everything = true;
+
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
@@ -234,6 +237,9 @@ BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSet
 BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data) {
     memcpy(page_wifi_setup.password, data->password, 64);
     page_wifi_setup.password[64] = '\0';
+
+    // On WIFI changes just redraw everything. This will not change often.
+    page_wifi_setup.redraw_everything = true;
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }

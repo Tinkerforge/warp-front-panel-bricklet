@@ -29,6 +29,9 @@ typedef struct {
     bool redraw_everything;
     bool redraw_background;
     bool redraw_qrcode;
+    bool redraw_ip_address;
+    bool redraw_ssid;
+    bool redraw_password;
 
     char ip_address[15+1];
     char ssid[49+1];

@@ -9,10 +9,22 @@ import random
 def fill_10(s):
     return s + "\0"*(10-len(s))
 
+def fill_15(s):
+    return s + "\0"*(15-len(s))
+
+def fill_49(s):
+    return s + "\0"*(49-len(s))
+
+def fill_64(s):
+    return s + "\0"*(64-len(s))
+
 FONT_INDEX = 7
 
 if __name__ == "__main__":
     wfp = get_first_warp_front_panel_bricklet()
+
+    wfp.set_display_wifi_setup_1(fill_15("10.0.0.1"), fill_49("wem2-Swq"));
+    wfp.set_display_wifi_setup_2(fill_64("MkoC-UwBq-rm7a-hrgH"));
 
     wfp.set_display_front_page_icon(0, True, 0, fill_10("PV"), FONT_INDEX, fill_10("22 kW"), FONT_INDEX);
     wfp.set_display_front_page_icon(1, True, 1, fill_10("Box 1"), FONT_INDEX, fill_10("9,6 kW"), FONT_INDEX);
