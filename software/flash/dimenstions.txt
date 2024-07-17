@@ -8,7 +8,7 @@ Icon with text:
 159x70
 
 Icon:
-79x70
+69x70
 
 Text:
-80x70
+90x70

@@ -30,6 +30,7 @@
 #include "display.h"
 #include "status_bar.h"
 #include "page_front.h"
+#include "page_wifi_setup.h"
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
     const uint8_t length = ((TFPMessageHeader*)message)->length;
@@ -45,6 +46,10 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_GET_DISPLAY_PAGE_INDEX:      return length != sizeof(GetDisplayPageIndex)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_page_index(message, response);
         case FID_SET_DISPLAY_FRONT_PAGE_ICON: return length != sizeof(SetDisplayFrontPageIcon) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_front_page_icon(message);
         case FID_GET_DISPLAY_FRONT_PAGE_ICON: return length != sizeof(GetDisplayFrontPageIcon) ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_front_page_icon(message, response);
+        case FID_SET_DISPLAY_WIFI_SETUP_1:    return length != sizeof(SetDisplayWifiSetup1)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_wifi_setup_1(message);
+        case FID_GET_DISPLAY_WIFI_SETUP_1:    return length != sizeof(GetDisplayWifiSetup1)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_1(message, response);
+        case FID_SET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(SetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_wifi_setup_2(message);
+        case FID_GET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(GetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_2(message, response);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -135,7 +140,7 @@ BootloaderHandleMessageResponse set_status_bar(const SetStatusBar *data) {
     if((status_bar.hours != data->hours) || (status_bar.minutes != data->minutes) || (status_bar.hours != data->minutes)) {
         status_bar.hours        = data->hours;
         status_bar.minutes      = data->minutes;
-        status_bar.seconds      = data->seconds;	
+        status_bar.seconds      = data->seconds;
         status_bar.redraw_clock = true;
     }
 
@@ -169,15 +174,24 @@ BootloaderHandleMessageResponse set_display_front_page_icon(const SetDisplayFron
         return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
     }
 
-    page_front_icon_list[data->icon_index].active       = data->active;
-    page_front_icon_list[data->icon_index].sprite_index = data->sprite_index;
-    page_front_icon_list[data->icon_index].font_index_1 = data->font_index_1;
-    page_front_icon_list[data->icon_index].font_index_2 = data->font_index_2;
-    memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, 10);
-    memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, 10);
-
-    // TODO: Check if redraw necessary
-    page_front_icon_list[data->icon_index].redraw = true;
+    if(page_front_icon_list[data->icon_index].active != data->active) {
+        page_front_icon_list[data->icon_index].active = data->active;
+        page_front_icon_list[data->icon_index].redraw_everything = true;
+    }
+    if(page_front_icon_list[data->icon_index].sprite_index != data->sprite_index) {
+        page_front_icon_list[data->icon_index].sprite_index = data->sprite_index;
+        page_front_icon_list[data->icon_index].redraw_sprite = true;
+    }
+    if((page_front_icon_list[data->icon_index].font_index_1 != data->font_index_1) || (memcmp(page_front_icon_list[data->icon_index].text_1, data->text_1, 10) != 0)) {
+        page_front_icon_list[data->icon_index].font_index_1 = data->font_index_1;
+        memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, 10);
+        page_front_icon_list[data->icon_index].redraw_text_1 = true;
+    }
+    if((page_front_icon_list[data->icon_index].font_index_2 != data->font_index_2) || (memcmp(page_front_icon_list[data->icon_index].text_2, data->text_2, 10) != 0)) {
+        page_front_icon_list[data->icon_index].font_index_2 = data->font_index_2;
+        memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, 10);
+        page_front_icon_list[data->icon_index].redraw_text_2 = true;
+    }
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
@@ -199,6 +213,37 @@ BootloaderHandleMessageResponse get_display_front_page_icon(const GetDisplayFron
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
+BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSetup1 *data) {
+    memcpy(page_wifi_setup.ip_address, data->ip_address, 15);
+    page_wifi_setup.ip_address[15] = '\0';
+
+    memcpy(page_wifi_setup.ssid, data->ssid, 49);
+    page_wifi_setup.ssid[49] = '\0';
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSetup1 *data, GetDisplayWifiSetup1_Response *response) {
+    response->header.length = sizeof(GetDisplayWifiSetup1_Response);
+    memcpy(response->ip_address, page_wifi_setup.ip_address, 15);
+    memcpy(response->ssid, page_wifi_setup.ssid, 49);
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data) {
+    memcpy(page_wifi_setup.password, data->password, 64);
+    page_wifi_setup.password[64] = '\0';
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response) {
+    response->header.length = sizeof(GetDisplayWifiSetup2_Response);
+    memcpy(response->password, page_wifi_setup.password, 49);
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
 
 
 void communication_tick(void) {

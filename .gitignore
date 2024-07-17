@@ -10,4 +10,12 @@ software/build
 software/src/brickletlib
 software/src/bricklib
 software/src/bricklib2
+software/tests/warp_seq*
+software/tests/*.mp4
+software/flash/*.h
+software/flash/flash_map.bin
+software/flash/fonts/char_list.txt
 hardware/kicad-libraries
+hardware/fp-info-cache
+hardware/*-backups
+hardware/~*.lck

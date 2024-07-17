@@ -68,6 +68,10 @@ void communication_init(void);
 #define FID_GET_DISPLAY_PAGE_INDEX 9
 #define FID_SET_DISPLAY_FRONT_PAGE_ICON 10
 #define FID_GET_DISPLAY_FRONT_PAGE_ICON 11
+#define FID_SET_DISPLAY_WIFI_SETUP_1 12
+#define FID_GET_DISPLAY_WIFI_SETUP_1 13
+#define FID_SET_DISPLAY_WIFI_SETUP_2 14
+#define FID_GET_DISPLAY_WIFI_SETUP_2 15
 
 
 typedef struct {
@@ -179,6 +183,36 @@ typedef struct {
     uint8_t font_index_2;
 } __attribute__((__packed__)) GetDisplayFrontPageIcon_Response;
 
+typedef struct {
+    TFPMessageHeader header;
+    char ip_address[15];
+    char ssid[49];
+} __attribute__((__packed__)) SetDisplayWifiSetup1;
+
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) GetDisplayWifiSetup1;
+
+typedef struct {
+    TFPMessageHeader header;
+    char ip_address[15];
+    char ssid[49];
+} __attribute__((__packed__)) GetDisplayWifiSetup1_Response;
+
+typedef struct {
+    TFPMessageHeader header;
+    char password[64];
+} __attribute__((__packed__)) SetDisplayWifiSetup2;
+
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) GetDisplayWifiSetup2;
+
+typedef struct {
+    TFPMessageHeader header;
+    char password[64];
+} __attribute__((__packed__)) GetDisplayWifiSetup2_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -192,6 +226,10 @@ BootloaderHandleMessageResponse set_display_page_index(const SetDisplayPageIndex
 BootloaderHandleMessageResponse get_display_page_index(const GetDisplayPageIndex *data, GetDisplayPageIndex_Response *response);
 BootloaderHandleMessageResponse set_display_front_page_icon(const SetDisplayFrontPageIcon *data);
 BootloaderHandleMessageResponse get_display_front_page_icon(const GetDisplayFrontPageIcon *data, GetDisplayFrontPageIcon_Response *response);
+BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSetup1 *data);
+BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSetup1 *data, GetDisplayWifiSetup1_Response *response);
+BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data);
+BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response);
 
 // Callbacks
 

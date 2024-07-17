@@ -25,6 +25,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "font.h"
+
+#define STATUS_BAR_WIDTH             320
+#define STATUS_BAR_HEIGHT            30
+#define STATUS_BAR_START_X           0
+#define STATUS_BAR_START_Y           0
+#define STATUS_BAR_END_X             (STATUS_BAR_WIDTH-1)
+#define STATUS_BAR_END_Y             (STATUS_BAR_HEIGHT-1)
+#define STATUS_BAR_ICON_LEFT_MARGIN  5
+#define STATUS_BAR_ICON_RIGHT_MARGIN 5
+
+#define STATUS_BAR_FONT_INDEX        FONT_24PX_FREEMONO_WHITE_ON_BLUE
+#define STATUS_BAR_CLOCK_CHARS       8
+
+
 typedef struct {
     bool redraw_everything;
     bool redraw_background;
