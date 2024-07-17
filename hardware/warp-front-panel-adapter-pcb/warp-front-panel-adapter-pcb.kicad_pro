@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 1.00076,
-          "width": 1.00076
+          "drill": 1.0,
+          "height": 0.1,
+          "width": 0.1
         },
         "silk_line_width": 0.09999999999999999,
         "silk_text_italic": false,
@@ -454,7 +454,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "warp-front-panel.kicad_pro",
+    "filename": "warp-front-panel-adapter-pcb.kicad_pro",
     "version": 1
   },
   "net_settings": {
