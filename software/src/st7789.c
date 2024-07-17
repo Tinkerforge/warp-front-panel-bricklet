@@ -190,7 +190,6 @@ void st7789_task_tick(void) {
 
     while(true) {
         display_task_tick();
-        status_bar_task_tick();
 
 #if 0
         if(button.is_pressed) {

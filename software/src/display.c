@@ -111,23 +111,33 @@ void display_task_draw_background(void) {
 }
 
 void display_task_tick(void) {
-    uint8_t new_index = button.index % 2;
-    bool redraw_everything = new_index != display.last_index;
+    const uint8_t new_index = button.index % 2;
+    const bool index_changed = new_index != display.last_index;
     display.last_index = new_index;
+
+    if(index_changed) {
+        status_bar.redraw_everything = true;
+    }
     switch(new_index) {
         default:
         case 0: {
-            if(!page_front.redraw_everything) {
-                page_front.redraw_everything = redraw_everything;
+            if(index_changed) {
+                status_bar_set_status("");
+                page_front.redraw_everything = true;
             }
+
+            status_bar_task_tick();
             page_front_task_tick();
             break;
         }
 
         case 1: {
-            if(!page_wifi_setup.redraw_everything) {
-                page_wifi_setup.redraw_everything = redraw_everything;
+            if(index_changed) {
+                status_bar_set_status("Access Point");
+                page_wifi_setup.redraw_everything = true;
             }
+
+            status_bar_task_tick();
             page_wifi_setup_task_tick();
             break;
         }

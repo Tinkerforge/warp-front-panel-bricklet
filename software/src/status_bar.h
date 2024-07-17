@@ -39,6 +39,7 @@
 #define STATUS_BAR_FONT_INDEX        FONT_24PX_FREEMONO_WHITE_ON_BLUE
 #define STATUS_BAR_CLOCK_CHARS       8
 
+#define STATUS_BAR_STATUS_CHARS_MAX  16
 
 typedef struct {
     bool redraw_everything;
@@ -46,6 +47,7 @@ typedef struct {
     bool redraw_wifi;
     bool redraw_ethernet;
     bool redraw_clock;
+    bool redraw_status;
 
     uint16_t background_color;
 
@@ -54,12 +56,15 @@ typedef struct {
     uint8_t hours;
     uint8_t minutes;
     uint8_t seconds;
+
+    char status[STATUS_BAR_STATUS_CHARS_MAX+1];
 } StatusBar;
 
 extern StatusBar status_bar;
 
 void status_bar_init(void);
 void status_bar_task_tick(void);
+void status_bar_set_status(const char *str);
 
 
 #endif

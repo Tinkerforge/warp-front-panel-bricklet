@@ -37,12 +37,23 @@ void status_bar_init(void) {
     status_bar.redraw_everything = true;
 }
 
+void status_bar_task_draw_status_bar_string(const char *str) {
+    font_task_draw_string(
+        str,
+        STATUS_BAR_STATUS_CHARS_MAX,
+        STATUS_BAR_FONT_INDEX,
+        STATUS_BAR_END_X - font_list[STATUS_BAR_FONT_INDEX].width*STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_ICON_RIGHT_MARGIN,
+        (STATUS_BAR_HEIGHT - font_list[STATUS_BAR_FONT_INDEX].height)/2
+    );
+}
+
 void status_bar_task_tick(void) {
     if(status_bar.redraw_everything) {
         status_bar.redraw_background = true;
         status_bar.redraw_wifi       = true;
         status_bar.redraw_ethernet   = true;
         status_bar.redraw_clock      = true;
+        status_bar.redraw_status     = true;
         status_bar.redraw_everything = false;
     }
 
@@ -61,22 +72,32 @@ void status_bar_task_tick(void) {
         status_bar.redraw_ethernet = false;
     }
 
-    if(status_bar.redraw_clock) {
-        char clock[9] = "00:00:00";
-        clock[0] += status_bar.hours   / 10;
-        clock[1] += status_bar.hours   % 10;
-        clock[3] += status_bar.minutes / 10;
-        clock[4] += status_bar.minutes % 10;
-        clock[6] += status_bar.seconds / 10;
-        clock[7] += status_bar.seconds % 10;
+    if(strlen(status_bar.status) > 0) {
+        if(status_bar.redraw_status) {
+            status_bar_task_draw_status_bar_string(status_bar.status);
+            status_bar.redraw_status = false;
+        }
+    } else if(status_bar.redraw_clock) {
+        char clock[STATUS_BAR_STATUS_CHARS_MAX] = "        00:00:00";
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 0] += status_bar.hours   / 10;
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 1] += status_bar.hours   % 10;
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 3] += status_bar.minutes / 10;
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 4] += status_bar.minutes % 10;
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 6] += status_bar.seconds / 10;
+        clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 7] += status_bar.seconds % 10;
 
-        font_task_draw_string(
-            clock,
-            STATUS_BAR_CLOCK_CHARS,
-            STATUS_BAR_FONT_INDEX,
-            STATUS_BAR_END_X - font_list[STATUS_BAR_FONT_INDEX].width*STATUS_BAR_CLOCK_CHARS - STATUS_BAR_ICON_RIGHT_MARGIN,
-            (STATUS_BAR_HEIGHT - font_list[STATUS_BAR_FONT_INDEX].height)/2
-        );
+        status_bar_task_draw_status_bar_string(clock);
         status_bar.redraw_clock = false;
+    }
+}
+
+void status_bar_set_status(const char *str) {
+    if(strlen(str) == 0) {
+        // If no status is set, fill with zeroes -> clock will be shown
+        memset(status_bar.status, 0, STATUS_BAR_STATUS_CHARS_MAX);
+    } else {
+        // If status is set, fill front with spaces -> new text will always overwrite old text completely
+        memset(status_bar.status, ' ', STATUS_BAR_STATUS_CHARS_MAX-strlen(str));
+        strcpy(status_bar.status + STATUS_BAR_STATUS_CHARS_MAX-strlen(str), str);
     }
 }
