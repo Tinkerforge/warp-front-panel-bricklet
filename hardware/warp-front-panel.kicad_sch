@@ -3585,10 +3585,6 @@
 		(uuid "17341dd7-40f7-4fce-8bc3-144aa8f9e6a5")
 	)
 	(no_connect
-		(at 129.54 123.19)
-		(uuid "1bf12983-df55-4ca7-9fd3-2bb4a7654851")
-	)
-	(no_connect
 		(at 217.17 137.16)
 		(uuid "209d643e-6e17-4350-8e90-4302007a0645")
 	)
@@ -3599,6 +3595,10 @@
 	(no_connect
 		(at 129.54 140.97)
 		(uuid "5e7c695c-2b14-4c76-bdf1-bc0b0f1baae2")
+	)
+	(no_connect
+		(at 129.54 151.13)
+		(uuid "708555b2-ff03-45f9-a90f-305020ddab80")
 	)
 	(no_connect
 		(at 129.54 148.59)
@@ -4039,6 +4039,16 @@
 			(type default)
 		)
 		(uuid "321fd1af-e72e-4886-9d43-35f01bce33fa")
+	)
+	(wire
+		(pts
+			(xy 114.3 105.41) (xy 129.54 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "33d85dda-361c-4ef7-be5c-3449536629ba")
 	)
 	(wire
 		(pts
@@ -4712,7 +4722,7 @@
 	)
 	(wire
 		(pts
-			(xy 111.76 151.13) (xy 114.3 151.13)
+			(xy 111.76 123.19) (xy 114.3 123.19)
 		)
 		(stroke
 			(width 0)
@@ -4722,7 +4732,7 @@
 	)
 	(wire
 		(pts
-			(xy 127 151.13) (xy 129.54 151.13)
+			(xy 127 123.19) (xy 129.54 123.19)
 		)
 		(stroke
 			(width 0)
@@ -5029,16 +5039,6 @@
 			(type default)
 		)
 		(uuid "e98569c6-24b5-4599-b9af-5ba5240a1ff4")
-	)
-	(wire
-		(pts
-			(xy 127 105.41) (xy 129.54 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ea071dcd-2e90-4beb-a353-852dddbac296")
 	)
 	(wire
 		(pts
@@ -6059,7 +6059,7 @@
 	)
 	(global_label "nWP"
 		(shape output)
-		(at 111.76 151.13 180)
+		(at 111.76 123.19 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6069,7 +6069,7 @@
 		)
 		(uuid "fec163d7-99e5-42ec-95bb-f998979b94c9")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 106.4128 151.13 0)
+			(at 106.4128 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8754,73 +8754,6 @@
 		)
 	)
 	(symbol
-		(lib_id "tinkerforge:R")
-		(at 120.65 105.41 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "65be7bba-b61a-4864-a30a-2eafee8a945c")
-		(property "Reference" "R113"
-			(at 118.11 102.87 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "220"
-			(at 120.65 105.41 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "kicad-libraries:R0603F"
-			(at 120.65 105.41 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 120.65 105.41 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 120.65 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5a5d154d-158e-4746-8591-9c3ab9371d2d")
-		)
-		(pin "2"
-			(uuid "d26056f1-c116-47a4-857d-4e426fd52607")
-		)
-		(instances
-			(project "warp-front-panel"
-				(path "/6f95f6fd-d127-4f29-b004-e8df75ff7108"
-					(reference "R113")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "tinkerforge:ER-TFT020")
 		(at 217.17 120.65 0)
 		(mirror y)
@@ -10570,7 +10503,7 @@
 	)
 	(symbol
 		(lib_id "tinkerforge:R")
-		(at 120.65 151.13 270)
+		(at 120.65 123.19 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -10579,7 +10512,7 @@
 		(dnp no)
 		(uuid "ddc62a65-07f8-46d0-b3a2-5b23e2b197da")
 		(property "Reference" "R108"
-			(at 120.65 148.59 90)
+			(at 120.65 125.73 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10587,7 +10520,7 @@
 			)
 		)
 		(property "Value" "82"
-			(at 120.65 151.13 90)
+			(at 120.65 123.19 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10595,7 +10528,7 @@
 			)
 		)
 		(property "Footprint" "kicad-libraries:R0603F"
-			(at 120.65 151.13 0)
+			(at 120.65 123.19 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10604,7 +10537,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 120.65 151.13 0)
+			(at 120.65 123.19 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10612,7 +10545,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 120.65 151.13 0)
+			(at 120.65 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
