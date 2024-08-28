@@ -162,9 +162,9 @@ typedef struct {
     uint32_t icon_index;
     bool active;
     uint32_t sprite_index;
-    char text_1[10];
+    char text_1[6];
     uint8_t font_index_1;
-    char text_2[10];
+    char text_2[6];
     uint8_t font_index_2;
 } __attribute__((__packed__)) SetDisplayFrontPageIcon;
 

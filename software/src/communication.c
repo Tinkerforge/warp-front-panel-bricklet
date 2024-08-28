@@ -184,12 +184,14 @@ BootloaderHandleMessageResponse set_display_front_page_icon(const SetDisplayFron
     }
     if((page_front_icon_list[data->icon_index].font_index_1 != data->font_index_1) || (memcmp(page_front_icon_list[data->icon_index].text_1, data->text_1, 10) != 0)) {
         page_front_icon_list[data->icon_index].font_index_1 = data->font_index_1;
-        memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, 10);
+        memcpy(page_front_icon_list[data->icon_index].text_1, data->text_1, PAGE_FRONT_TEXT_MAX_CHAR);
+        page_front_icon_list[data->icon_index].text_1[PAGE_FRONT_TEXT_MAX_CHAR] = '\0';
         page_front_icon_list[data->icon_index].redraw_text_1 = true;
     }
     if((page_front_icon_list[data->icon_index].font_index_2 != data->font_index_2) || (memcmp(page_front_icon_list[data->icon_index].text_2, data->text_2, 10) != 0)) {
         page_front_icon_list[data->icon_index].font_index_2 = data->font_index_2;
-        memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, 10);
+        memcpy(page_front_icon_list[data->icon_index].text_2, data->text_2, PAGE_FRONT_TEXT_MAX_CHAR);
+        page_front_icon_list[data->icon_index].text_2[PAGE_FRONT_TEXT_MAX_CHAR] = '\0';
         page_front_icon_list[data->icon_index].redraw_text_2 = true;
     }
 
