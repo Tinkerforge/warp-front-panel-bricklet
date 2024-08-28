@@ -31,6 +31,7 @@
 #include "status_bar.h"
 #include "page_front.h"
 #include "page_wifi_setup.h"
+#include "led.h"
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
     const uint8_t length = ((TFPMessageHeader*)message)->length;
@@ -260,12 +261,23 @@ BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSet
 }
 
 BootloaderHandleMessageResponse set_led_state(const SetLEDState *data) {
+    if(data->color > WARP_FRONT_PANEL_LED_COLOR_YELLOW) {
+        return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+    }
+    if(data->pattern > WARP_FRONT_PANEL_LED_PATTERN_BREATHING) {
+        return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+    }
+
+    led.color   = data->color;
+    led.pattern = data->pattern;
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDState_Response *response) {
     response->header.length = sizeof(GetLEDState_Response);
+    response->color         = led.color;
+    response->pattern       = led.pattern;
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

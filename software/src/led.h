@@ -1,7 +1,7 @@
 /* warp-front-panel-bricklet
  * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
  *
- * config_button.h: Configuration for button with LED
+ * led.h: Driver for RG LED
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,35 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef CONFIG_BUTTON_H
-#define CONFIG_BUTTON_H
+#ifndef LED_H
+#define LED_H
 
-#include "xmc_gpio.h"
+#include <stdint.h>
+#include <stdbool.h>
 
-#define BUTTON_SWITCH_PIN  P1_4
+#define LED_BLINK_DURATION_ON   250 // in ms
+#define LED_BLINK_DURATION_OFF  250 // in ms
+
+typedef struct {
+	uint8_t pattern;
+	uint8_t color;
+
+	uint8_t set_r;
+	uint8_t set_g;
+
+	uint32_t blink_num;
+	uint32_t blink_count;
+	bool blink_on;
+	uint32_t blink_last_time;
+
+	uint32_t breathing_time;
+	int16_t breathing_index;
+	bool breathing_up;
+} LED;
+
+extern LED led;
+
+void led_init(void);
+void led_tick(void);
 
 #endif

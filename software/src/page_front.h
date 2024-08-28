@@ -54,9 +54,9 @@ typedef struct {
     bool redraw_text_2;
     bool active;
     uint32_t sprite_index;
-    char text_1[PAGE_FRONT_TEXT_MAX_CHAR];
+    char text_1[PAGE_FRONT_TEXT_MAX_CHAR+1];
     uint8_t font_index_1;
-    char text_2[PAGE_FRONT_TEXT_MAX_CHAR];
+    char text_2[PAGE_FRONT_TEXT_MAX_CHAR+1];
     uint8_t font_index_2;
 } PageFrontIconList;
 

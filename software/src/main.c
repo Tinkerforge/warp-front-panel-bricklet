@@ -32,6 +32,7 @@
 #include "st7789.h"
 #include "by25q.h"
 #include "button.h"
+#include "led.h"
 #include "psram.h"
 #include "font.h"
 #include "sprite.h"
@@ -48,6 +49,7 @@ int main(void) {
     st7789_init();
     by25q_init();
     button_init();
+    led_init();
     psram_init();
     font_init();
     sprite_init();
@@ -62,6 +64,7 @@ int main(void) {
         st7789_tick();
         by25q_tick();
         button_tick();
+        led_tick();
         psram_tick();
     }
 }
