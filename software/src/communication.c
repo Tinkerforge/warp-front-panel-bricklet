@@ -209,21 +209,24 @@ BootloaderHandleMessageResponse get_display_front_page_icon(const GetDisplayFron
     response->sprite_index = page_front_icon_list[data->icon_index].sprite_index;
     response->font_index_1 = page_front_icon_list[data->icon_index].font_index_1;
     response->font_index_2 = page_front_icon_list[data->icon_index].font_index_2;
-    memcpy(response->text_1, page_front_icon_list[data->icon_index].text_1, 10);
-    memcpy(response->text_2, page_front_icon_list[data->icon_index].text_2, 10);
+    memcpy(response->text_1, page_front_icon_list[data->icon_index].text_1, PAGE_FRONT_TEXT_MAX_CHAR);
+    memcpy(response->text_2, page_front_icon_list[data->icon_index].text_2, PAGE_FRONT_TEXT_MAX_CHAR);
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSetup1 *data) {
-    memcpy(page_wifi_setup.ip_address, data->ip_address, 15);
-    page_wifi_setup.ip_address[15] = '\0';
+    if(strncmp(page_wifi_setup.ip_address, data->ip_address, 15) != 0) {
+        memcpy(page_wifi_setup.ip_address, data->ip_address, 15);
+        page_wifi_setup.ip_address[15] = '\0';
+        page_wifi_setup.redraw_ip_address = true;
+    }
 
-    memcpy(page_wifi_setup.ssid, data->ssid, 49);
-    page_wifi_setup.ssid[49] = '\0';
-
-    // On WIFI changes just redraw everything. This will not change often.
-    page_wifi_setup.redraw_everything = true;
+    if(strncmp(page_wifi_setup.ssid, data->ssid, 49) != 0) {
+        memcpy(page_wifi_setup.ssid, data->ssid, 49);
+        page_wifi_setup.ssid[49] = '\0';
+        page_wifi_setup.redraw_ssid = true;
+    }
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
@@ -237,11 +240,12 @@ BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSet
 }
 
 BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data) {
-    memcpy(page_wifi_setup.password, data->password, 64);
-    page_wifi_setup.password[64] = '\0';
+    if(strncmp(page_wifi_setup.password, data->password, 64) != 0) {
+        memcpy(page_wifi_setup.password, data->password, 64);
+        page_wifi_setup.password[64] = '\0';
 
-    // On WIFI changes just redraw everything. This will not change often.
-    page_wifi_setup.redraw_everything = true;
+        page_wifi_setup.redraw_qrcode = true;
+    }
 
     return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
