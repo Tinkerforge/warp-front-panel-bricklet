@@ -38,6 +38,15 @@ void communication_init(void);
 #define WARP_FRONT_PANEL_FLASH_STATUS_OK 0
 #define WARP_FRONT_PANEL_FLASH_STATUS_BUSY 1
 
+#define WARP_FRONT_PANEL_LED_PATTERN_OFF 0
+#define WARP_FRONT_PANEL_LED_PATTERN_ON 1
+#define WARP_FRONT_PANEL_LED_PATTERN_BLINKING 2
+#define WARP_FRONT_PANEL_LED_PATTERN_BREATHING 3
+
+#define WARP_FRONT_PANEL_LED_COLOR_GREEN 0
+#define WARP_FRONT_PANEL_LED_COLOR_RED 1
+#define WARP_FRONT_PANEL_LED_COLOR_YELLOW 2
+
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER 0
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_FIRMWARE 1
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
@@ -72,6 +81,8 @@ void communication_init(void);
 #define FID_GET_DISPLAY_WIFI_SETUP_1 13
 #define FID_SET_DISPLAY_WIFI_SETUP_2 14
 #define FID_GET_DISPLAY_WIFI_SETUP_2 15
+#define FID_SET_LED_STATE 16
+#define FID_GET_LED_STATE 17
 
 
 typedef struct {
@@ -213,6 +224,22 @@ typedef struct {
     char password[64];
 } __attribute__((__packed__)) GetDisplayWifiSetup2_Response;
 
+typedef struct {
+    TFPMessageHeader header;
+    uint8_t pattern;
+    uint8_t color;
+} __attribute__((__packed__)) SetLEDState;
+
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) GetLEDState;
+
+typedef struct {
+    TFPMessageHeader header;
+    uint8_t pattern;
+    uint8_t color;
+} __attribute__((__packed__)) GetLEDState_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -230,6 +257,8 @@ BootloaderHandleMessageResponse set_display_wifi_setup_1(const SetDisplayWifiSet
 BootloaderHandleMessageResponse get_display_wifi_setup_1(const GetDisplayWifiSetup1 *data, GetDisplayWifiSetup1_Response *response);
 BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSetup2 *data);
 BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response);
+BootloaderHandleMessageResponse set_led_state(const SetLEDState *data);
+BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDState_Response *response);
 
 // Callbacks
 

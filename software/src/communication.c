@@ -50,6 +50,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_GET_DISPLAY_WIFI_SETUP_1:    return length != sizeof(GetDisplayWifiSetup1)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_1(message, response);
         case FID_SET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(SetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display_wifi_setup_2(message);
         case FID_GET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(GetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_2(message, response);
+        case FID_SET_LED_STATE:               return length != sizeof(SetLEDState)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_led_state(message);
+        case FID_GET_LED_STATE:               return length != sizeof(GetLEDState)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_led_state(message, response);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -253,6 +255,17 @@ BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSet
 BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response) {
     response->header.length = sizeof(GetDisplayWifiSetup2_Response);
     memcpy(response->password, page_wifi_setup.password, 49);
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_led_state(const SetLEDState *data) {
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDState_Response *response) {
+    response->header.length = sizeof(GetLEDState_Response);
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
