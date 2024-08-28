@@ -13,11 +13,15 @@ FONTS = [
 ]
 
 SPRITES = [
-    'ICON_SUN',               # 0.png
-    'ICON_TYPE2',             # 1.png
-    'ICON_MONEY',             # 2.png
-    'ICON_LOCK_OPEN',         # 3.png
-    'ICON_COG',               # 4.png
-    'STATUS_ICON_WIFI',       # 5.png
-    'STATUS_ICON_ETHERNET',   # 6.png
+    'ICON_SUN',                #  0.png
+    'ICON_TYPE2',              #  1.png
+    'ICON_MONEY',              #  2.png
+    'ICON_LOCK_OPEN',          #  3.png
+    'ICON_COG',                #  4.png
+    'STATUS_ICON_WIFI_3BAR',   #  5.png
+    'STATUS_ICON_ETHERNET',    #  6.png
+    'STATUS_ICON_WIFI_2BAR',   #  7.png
+    'STATUS_ICON_WIFI_1BAR',   #  8.png
+    'STATUS_ICON_NO_WIFI',     #  9.png
+    'STATUS_ICON_NO_ETHERNET', # 10.png
 ]
