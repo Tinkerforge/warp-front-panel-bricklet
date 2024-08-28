@@ -30,7 +30,7 @@
 #define BY25Q_SELECT_PIN_AF        (XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT7 | P4_7_AF_U1C0_SELO0)
 #define BY25Q_SLAVE                XMC_SPI_CH_SLAVE_SELECT_0
 
-#define BY25Q_NWP_PIN              P2_12
+#define BY25Q_NWP_PIN              P2_1
 #define BY25Q_NHOLD_PIN            P2_13
 
 #endif

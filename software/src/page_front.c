@@ -29,8 +29,6 @@
 #include "font.h"
 #include "status_bar.h"
 
-#define PAGE_FRONT_TEXT_MAX_CHAR 6
-
 #define PAGE_FRONT_ICON_WIDTH 69
 #define PAGE_FRONT_ICON_HEIGHT 70
 #define PAGE_FRONT_TEXT_WIDTH 90

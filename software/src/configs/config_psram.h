@@ -26,6 +26,6 @@
 
 // SPI is shared with ST7789, we only define the PSRAM specific pins here
 
-#define PSRAM_SELECT_PIN P2_1
+//#define PSRAM_SELECT_PIN P2_1
 
 #endif
