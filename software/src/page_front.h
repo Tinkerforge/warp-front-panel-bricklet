@@ -27,6 +27,8 @@
 
 #include "st7789.h"
 
+#define PAGE_FRONT_TEXT_MAX_CHAR 7
+
 #define PAGE_FRONT_INDEX_LEFT_TOP     0
 #define PAGE_FRONT_INDEX_LEFT_MID     1
 #define PAGE_FRONT_INDEX_LEFT_BOTTOM  2
@@ -52,9 +54,9 @@ typedef struct {
     bool redraw_text_2;
     bool active;
     uint32_t sprite_index;
-    char text_1[10];
+    char text_1[PAGE_FRONT_TEXT_MAX_CHAR];
     uint8_t font_index_1;
-    char text_2[10];
+    char text_2[PAGE_FRONT_TEXT_MAX_CHAR];
     uint8_t font_index_2;
 } PageFrontIconList;
 

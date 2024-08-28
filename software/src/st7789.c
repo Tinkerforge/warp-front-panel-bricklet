@@ -161,7 +161,7 @@ void st7789_task_tick(void) {
     st7789_task_init();
 
     // Read top-left pixel of WIFI symbol for status bar background color
-    by25q_task_read((uint8_t*)&status_bar.background_color, 2, sprite_list[SPRITE_STATUS_ICON_WIFI].start_address);
+    by25q_task_read((uint8_t*)&status_bar.background_color, 2, sprite_list[SPRITE_STATUS_ICON_WIFI_3BAR].start_address);
 
 #if 0
     fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);

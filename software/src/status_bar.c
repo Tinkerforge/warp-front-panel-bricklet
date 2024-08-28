@@ -63,12 +63,26 @@ void status_bar_task_tick(void) {
     }
 
     if(status_bar.redraw_wifi) {
-        sprite_task_draw(SPRITE_STATUS_ICON_WIFI, STATUS_BAR_ICON_LEFT_MARGIN, STATUS_BAR_START_Y);
+        const uint16_t status = status_bar.wifi_status >> 16;
+        const int16_t  rssi   = (status_bar.wifi_status & 0xFFFF) - 127;
+        uint8_t icon_wifi = SPRITE_STATUS_ICON_NO_WIFI;
+        if(status == 3) { // 3 = connected
+            if(rssi > -65) {
+                icon_wifi = SPRITE_STATUS_ICON_WIFI_3BAR;
+            } else if(rssi > -80) {
+                icon_wifi = SPRITE_STATUS_ICON_WIFI_2BAR;
+            } else {
+                icon_wifi = SPRITE_STATUS_ICON_WIFI_1BAR;
+            }
+        }
+        sprite_task_draw(icon_wifi, STATUS_BAR_ICON_LEFT_MARGIN, STATUS_BAR_START_Y);
         status_bar.redraw_wifi = false;
     }
 
     if(status_bar.redraw_ethernet) {
-        sprite_task_draw(SPRITE_STATUS_ICON_ETHERNET, STATUS_BAR_ICON_LEFT_MARGIN + sprite_list[SPRITE_STATUS_ICON_WIFI].width, STATUS_BAR_START_Y);
+        // 3 = connected
+        const uint8_t icon_ethernet = status_bar.ethernet_status == 3 ? SPRITE_STATUS_ICON_ETHERNET : SPRITE_STATUS_ICON_NO_ETHERNET;
+        sprite_task_draw(icon_ethernet, STATUS_BAR_ICON_LEFT_MARGIN + sprite_list[SPRITE_STATUS_ICON_WIFI_3BAR].width, STATUS_BAR_START_Y);
         status_bar.redraw_ethernet = false;
     }
 
