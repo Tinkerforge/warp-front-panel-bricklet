@@ -36,11 +36,15 @@
 #include "page_front.h"
 #include "page_wifi_setup.h"
 #include "status_bar.h"
+#include "communication.h"
 
 Display display;
 
 void display_init(void) {
     memset(&display, 0, sizeof(Display));
+    display.active    = WARP_FRONT_PANEL_DISPLAY_AUTOMATIC;
+    display.is_active = true;
+    display.countdown = MAX(1, system_timer_get_ms());
 }
 
 void display_fill_u16(const uint16_t color, uint16_t *data, const uint16_t length) {
@@ -114,6 +118,11 @@ void display_task_tick(void) {
     const uint8_t new_index = button.index % 2;
     const bool index_changed = new_index != display.last_index;
     display.last_index = new_index;
+
+    if(system_timer_is_time_elapsed_ms(display.countdown, DISPLAY_COUNTDOWN_MS)) {
+        display.is_active = false;
+        display.countdown = 0;
+    }
 
     if(index_changed) {
         status_bar.redraw_everything = true;

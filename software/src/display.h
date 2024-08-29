@@ -33,10 +33,14 @@
 #define DISPLAY_START_Y           0
 #define DISPLAY_END_X             (DISPLAY_WIDTH-1)
 #define DISPLAY_END_Y             (DISPLAY_HEIGHT-1)
-
+#define DISPLAY_COUNTDOWN_MS      (1000*60*60) // 60 minutes
 
 typedef struct {
     uint8_t last_index;
+    uint32_t countdown;
+    uint8_t active;
+
+    bool is_active;
 } Display;
 
 extern Display display;

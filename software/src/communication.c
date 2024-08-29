@@ -22,8 +22,10 @@
 #include "communication.h"
 
 #include "bricklib2/utility/communication_callback.h"
+#include "bricklib2/utility/util_definitions.h"
 #include "bricklib2/protocols/tfp/tfp.h"
 #include "bricklib2/os/coop_task.h"
+#include "bricklib2/hal/system_timer/system_timer.h"
 
 #include "st7789.h"
 #include "by25q.h"
@@ -53,6 +55,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_GET_DISPLAY_WIFI_SETUP_2:    return length != sizeof(GetDisplayWifiSetup2)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display_wifi_setup_2(message, response);
         case FID_SET_LED_STATE:               return length != sizeof(SetLEDState)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_led_state(message);
         case FID_GET_LED_STATE:               return length != sizeof(GetLEDState)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_led_state(message, response);
+        case FID_SET_DISPLAY:                 return length != sizeof(SetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display(message);
+        case FID_GET_DISPLAY:                 return length != sizeof(GetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display(message, response);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -278,6 +282,42 @@ BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDSta
     response->header.length = sizeof(GetLEDState_Response);
     response->color         = led.color;
     response->pattern       = led.pattern;
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_display(const SetDisplay *data) {
+    if(data->display > WARP_FRONT_PANEL_DISPLAY_AUTOMATIC) {
+        return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+    }
+
+    display.active = data->display;
+    if(display.active == WARP_FRONT_PANEL_DISPLAY_OFF) {
+        display.is_active = false;
+        display.countdown = 0;
+    } else {
+        if(!display.is_active) {
+            display.is_active = true;
+            display.countdown = system_timer_get_ms();
+        }
+    }
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_Response *response) {
+    response->header.length = sizeof(GetDisplay_Response);
+    response->display       = display.active;
+    if(display.countdown == 0) {
+        response->countdown = 0;
+    } else {
+        if(system_timer_is_time_elapsed_ms(display.countdown, DISPLAY_COUNTDOWN_MS)) {
+            response->countdown = 0;
+        } else {
+            const uint32_t diff = system_timer_get_ms() - display.countdown;
+            response->countdown = DISPLAY_COUNTDOWN_MS - diff;
+        }
+    }
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

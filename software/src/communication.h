@@ -47,6 +47,9 @@ void communication_init(void);
 #define WARP_FRONT_PANEL_LED_COLOR_RED 1
 #define WARP_FRONT_PANEL_LED_COLOR_YELLOW 2
 
+#define WARP_FRONT_PANEL_DISPLAY_OFF 0
+#define WARP_FRONT_PANEL_DISPLAY_AUTOMATIC 1
+
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER 0
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_FIRMWARE 1
 #define WARP_FRONT_PANEL_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
@@ -83,6 +86,8 @@ void communication_init(void);
 #define FID_GET_DISPLAY_WIFI_SETUP_2 15
 #define FID_SET_LED_STATE 16
 #define FID_GET_LED_STATE 17
+#define FID_SET_DISPLAY 18
+#define FID_GET_DISPLAY 19
 
 
 typedef struct {
@@ -240,6 +245,21 @@ typedef struct {
     uint8_t color;
 } __attribute__((__packed__)) GetLEDState_Response;
 
+typedef struct {
+    TFPMessageHeader header;
+    uint8_t display;
+} __attribute__((__packed__)) SetDisplay;
+
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) GetDisplay;
+
+typedef struct {
+    TFPMessageHeader header;
+    uint8_t display;
+    uint32_t countdown;
+} __attribute__((__packed__)) GetDisplay_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -259,6 +279,8 @@ BootloaderHandleMessageResponse set_display_wifi_setup_2(const SetDisplayWifiSet
 BootloaderHandleMessageResponse get_display_wifi_setup_2(const GetDisplayWifiSetup2 *data, GetDisplayWifiSetup2_Response *response);
 BootloaderHandleMessageResponse set_led_state(const SetLEDState *data);
 BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDState_Response *response);
+BootloaderHandleMessageResponse set_display(const SetDisplay *data);
+BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_Response *response);
 
 // Callbacks
 

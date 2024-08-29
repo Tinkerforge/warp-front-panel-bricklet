@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #############################################################
-# This file was automatically generated on 2024-08-28.      #
+# This file was automatically generated on 2024-08-29.      #
 #                                                           #
 # Python Bindings Version 2.1.31                            #
 #                                                           #
@@ -27,6 +27,7 @@ GetStatusBar = namedtuple('StatusBar', ['ethernet_status', 'wifi_status', 'hours
 GetDisplayFrontPageIcon = namedtuple('DisplayFrontPageIcon', ['active', 'sprite_index', 'text_1', 'font_index_1', 'text_2', 'font_index_2'])
 GetDisplayWifiSetup1 = namedtuple('DisplayWifiSetup1', ['ip_address', 'ssid'])
 GetLEDState = namedtuple('LEDState', ['pattern', 'color'])
+GetDisplay = namedtuple('Display', ['display', 'countdown'])
 GetSPITFPErrorCount = namedtuple('SPITFPErrorCount', ['error_count_ack_checksum', 'error_count_message_checksum', 'error_count_frame', 'error_count_overflow'])
 GetIdentity = namedtuple('Identity', ['uid', 'connected_uid', 'position', 'hardware_version', 'firmware_version', 'device_identifier'])
 
@@ -58,6 +59,8 @@ class BrickletWARPFrontPanel(Device):
     FUNCTION_GET_DISPLAY_WIFI_SETUP_2 = 15
     FUNCTION_SET_LED_STATE = 16
     FUNCTION_GET_LED_STATE = 17
+    FUNCTION_SET_DISPLAY = 18
+    FUNCTION_GET_DISPLAY = 19
     FUNCTION_GET_SPITFP_ERROR_COUNT = 234
     FUNCTION_SET_BOOTLOADER_MODE = 235
     FUNCTION_GET_BOOTLOADER_MODE = 236
@@ -80,6 +83,8 @@ class BrickletWARPFrontPanel(Device):
     LED_COLOR_GREEN = 0
     LED_COLOR_RED = 1
     LED_COLOR_YELLOW = 2
+    DISPLAY_OFF = 0
+    DISPLAY_AUTOMATIC = 1
     BOOTLOADER_MODE_BOOTLOADER = 0
     BOOTLOADER_MODE_FIRMWARE = 1
     BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT = 2
@@ -122,6 +127,8 @@ class BrickletWARPFrontPanel(Device):
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY_WIFI_SETUP_2] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_LED_STATE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_LED_STATE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_SPITFP_ERROR_COUNT] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_SET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletWARPFrontPanel.FUNCTION_GET_BOOTLOADER_MODE] = BrickletWARPFrontPanel.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -306,6 +313,24 @@ class BrickletWARPFrontPanel(Device):
         self.check_validity()
 
         return GetLEDState(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_LED_STATE, (), '', 10, 'B B'))
+
+    def set_display(self, display):
+        r"""
+
+        """
+        self.check_validity()
+
+        display = int(display)
+
+        self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_SET_DISPLAY, (display,), 'B', 0, '')
+
+    def get_display(self):
+        r"""
+
+        """
+        self.check_validity()
+
+        return GetDisplay(*self.ipcon.send_request(self, BrickletWARPFrontPanel.FUNCTION_GET_DISPLAY, (), '', 13, 'B I'))
 
     def get_spitfp_error_count(self):
         r"""

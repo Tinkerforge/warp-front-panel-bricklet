@@ -155,6 +155,14 @@ void st7789_task_init(void) {
     coop_task_sleep_ms(50);
 }
 
+void st7789_task_display_off(void) {
+    st7789_task_write_command(ST7789_CMD_DISPOFF);
+    coop_task_sleep_ms(50);
+}
+
+void st7789_task_display_on(void) {
+    st7789_task_write_command(ST7789_CMD_DISPON);
+}
 
 void st7789_task_tick(void) {
     st7789_task_reset();
@@ -163,75 +171,18 @@ void st7789_task_tick(void) {
     // Read top-left pixel of WIFI symbol for status bar background color
     by25q_task_read((uint8_t*)&status_bar.background_color, 2, sprite_list[SPRITE_STATUS_ICON_WIFI_3BAR].start_address);
 
-#if 0
-    fill_u16(ST7789_COLOR_BLACK, circle, CIRCLE_SIZE*CIRCLE_SIZE);
-    st7789_draw_circle(circle, CIRCLE_SIZE);
-#endif
-
-#if 0
-    st7789_task_draw_filled_rect(ST7789_COLOR_WHITE, 0, 0, 319, 239);
-    st7789_task_draw_filled_rect(ST7789_COLOR_BLACK, 1, 1, 318, 238);
-    uint16_t y = 1;
-    uint16_t x = 0;
-    int16_t dir = 1;
-#endif
-
-#if 0
-    font_task_draw_string("!\"#$%%&'()*+,-./01234567", 24, 0, 0, 0);
-    font_task_draw_string("89:;<=>?@ABCDEFGHIJKLMNO", 24, 0, 0, 18);
-    font_task_draw_string("PQRSTUVWXYZ[\\]^_`abcdefg", 24, 0, 0, 36);
-    font_task_draw_string("hijklmnopqrstuvwxyz{|}~", 24, 0, 0, 54);
-    char special_chars[32] = {'\0'};
-    for(uint8_t i = 16; i < 33; i++) {
-        special_chars[i-16] = i;
-    }
-    font_task_draw_string(special_chars, strlen(special_chars), 0, 0, 72);
-#endif
-
+    bool was_active = true;
     while(true) {
         display_task_tick();
-
-#if 0
-        if(button.is_pressed) {
-            font_task_draw_string(str_pressed, 10, 0, 100, 100);
-        } else {
-            font_task_draw_string(str_unpressed, 10, 0, 100, 100);
-        }
-#endif
-#if 0
-        for(uint32_t add = 0; add < 2; add++) {
-            st7789_task_draw_from_by25q(add*320*240*sizeof(uint16_t), 0, 0, 319, 239);
-            coop_task_yield();
-            coop_task_sleep_ms(2500);
-        }
-#endif
-#if 0
-        if(by25q.to_write_index >= 0) {
-            st7789_task_write_display((uint16_t*)by25q.data_write, 256/2);
-            by25q.to_write_index = -1;
-        }
-#endif
-#if 0
-        for(x = 0; x < 320-CIRCLE_SIZE; x++) {
-            if((y >= 240-CIRCLE_SIZE) || (y <= 0)){
-                dir = -dir;
-            }
-            y += dir;
-            st7789_task_draw_image(circle, x, y, x+CIRCLE_SIZE-1, y+CIRCLE_SIZE-1);
-            coop_task_yield();
-        }
-        for(x = 320-CIRCLE_SIZE-1; x > 0; x--) {
-            if((y >= 240-CIRCLE_SIZE) || (y <= 0)){
-                dir = -dir;
-            }
-            y += dir;
-            st7789_task_draw_image(circle, x, y, x+CIRCLE_SIZE-1, y+CIRCLE_SIZE-1);
-            coop_task_yield();
-        }
-        uint16_t col = (y>>5)*77;
-        st7789_task_draw_filled_rect(col, 0, 0, 319, 239);
-#endif
         coop_task_yield();
+
+        if(!display.is_active && was_active) {
+            st7789_task_display_off();
+            was_active = false;
+        } else if(display.is_active && !was_active) {
+            st7789_task_display_on();
+            was_active = true;
+        }
     }
 }
 
