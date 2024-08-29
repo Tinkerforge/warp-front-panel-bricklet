@@ -24,4 +24,8 @@ SPRITES = [
     'STATUS_ICON_WIFI_1BAR',   #  8.png
     'STATUS_ICON_NO_WIFI',     #  9.png
     'STATUS_ICON_NO_ETHERNET', # 10.png
+    'ICON_HEATING',            # 11.png
+    'ICON_CHARGE_MANAGEMENT',  # 12.png
+    'ICON_HOME_METER',         # 13.png
+    'ICON_EMPTY',              # 14.png
 ]
