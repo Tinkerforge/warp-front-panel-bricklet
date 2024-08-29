@@ -31,6 +31,7 @@
 
 #include "xmc_gpio.h"
 #include "xmc_ccu4.h"
+#include "xmc_scu.h"
 
 #include "cie1931.h"
 
@@ -86,6 +87,13 @@ void led_ccu4_pwm_init(XMC_GPIO_PORT_t *const port, const uint8_t pin, const uin
 		.output_level        = XMC_GPIO_OUTPUT_LEVEL_LOW,
 	};
 
+	const XMC_CCU4_SLICE_EVENT_CONFIG_t event_config = {
+		 .duration = XMC_CCU4_SLICE_EVENT_FILTER_5_CYCLES,
+		 .edge = XMC_CCU4_SLICE_EVENT_EDGE_SENSITIVITY_RISING_EDGE,
+		 .level = XMC_CCU4_SLICE_EVENT_LEVEL_SENSITIVITY_ACTIVE_HIGH,
+		 .mapped_input = XMC_CCU4_SLICE_INPUT_AI
+	};
+
     XMC_CCU4_Init(CCU41, XMC_CCU4_SLICE_MCMS_ACTION_TRANSFER_PR_CR);
     XMC_CCU4_StartPrescaler(CCU41);
     XMC_CCU4_SLICE_CompareInit(slice[ccu4_slice_number], &compare_config);
@@ -98,6 +106,9 @@ void led_ccu4_pwm_init(XMC_GPIO_PORT_t *const port, const uint8_t pin, const uin
     		                             (XMC_CCU4_SHADOW_TRANSFER_PRESCALER_SLICE_0 << (ccu4_slice_number*4)));
 
     XMC_GPIO_Init(port, pin, &gpio_out_config);
+
+    XMC_CCU4_SLICE_ConfigureEvent(slice[ccu4_slice_number], XMC_CCU4_SLICE_EVENT_1, &event_config);
+    XMC_CCU4_SLICE_StartConfig(slice[ccu4_slice_number], XMC_CCU4_SLICE_EVENT_1, XMC_CCU4_SLICE_START_MODE_TIMER_START_CLEAR);
 
     XMC_CCU4_EnableClock(CCU41, ccu4_slice_number);
     XMC_CCU4_SLICE_StartTimer(slice[ccu4_slice_number]);
@@ -114,6 +125,7 @@ void led_init(void) {
 
 	led_ccu4_pwm_init(LED_R_PIN, LED_R_CCU4_SLICE, LED_PERIOD_VALUE-1);
 	led_ccu4_pwm_init(LED_G_PIN, LED_G_CCU4_SLICE, LED_PERIOD_VALUE-1);
+	XMC_SCU_SetCcuTriggerHigh(SCU_GENERAL_CCUCON_GSC41_Msk);
 
 	memset(&led, 0, sizeof(LED));
 }
@@ -126,8 +138,8 @@ void led_set_color_value(const uint8_t value) {
 		led.set_r = 0;
 		led.set_g = value;
 	} else if(led.color == WARP_FRONT_PANEL_LED_COLOR_YELLOW) {
-		led.set_r = value/2;
-		led.set_g = value/2;
+		led.set_r = value*203/255; // 203 is 50% pwm, which is maximum possible for yellow
+		led.set_g = value*203/255;
 	}
 }
 
