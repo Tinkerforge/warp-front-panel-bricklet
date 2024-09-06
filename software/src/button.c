@@ -27,6 +27,7 @@
 #include <string.h>
 #include "xmc_gpio.h"
 #include "display.h"
+#include "communication.h"
 
 Button button;
 
@@ -45,12 +46,14 @@ void button_tick(void) {
     const bool button_pressed = !XMC_GPIO_GetInput(BUTTON_SWITCH_PIN);
     if(button_pressed && !button.is_pressed) {
         if(system_timer_is_time_elapsed_ms(button.last_pressed, 50)) {
-            if(display.is_active) {
-                button.index++;
-            } else {
-                display.is_active = true;
+            if(display.active == WARP_FRONT_PANEL_DISPLAY_AUTOMATIC) {
+                if(display.is_active) {
+                    button.index++;
+                } else {
+                    display.is_active = true;
+                }
+                display.countdown = system_timer_get_ms();
             }
-            display.countdown = system_timer_get_ms();
             button.last_pressed = system_timer_get_ms();
         }
     }

@@ -119,7 +119,9 @@ void display_task_tick(void) {
     const bool index_changed = new_index != display.last_index;
     display.last_index = new_index;
 
-    if(system_timer_is_time_elapsed_ms(display.countdown, DISPLAY_COUNTDOWN_MS)) {
+    if(display.active == WARP_FRONT_PANEL_DISPLAY_OFF) {
+        display.is_active = false;
+    } else if(system_timer_is_time_elapsed_ms(display.countdown, DISPLAY_COUNTDOWN_MS)) {
         display.is_active = false;
         display.countdown = 0;
     }
