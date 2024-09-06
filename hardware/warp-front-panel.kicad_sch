@@ -8021,7 +8021,7 @@
 		(dnp no)
 		(uuid "43cc955d-0053-4684-acaf-82015b25bb84")
 		(property "Reference" "C114"
-			(at 104.14 52.07 0)
+			(at 110.49 51.816 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8030,7 +8030,7 @@
 			)
 		)
 		(property "Value" "220pF"
-			(at 104.14 57.15 0)
+			(at 111.76 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8365,7 +8365,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "4,7"
 			(at 120.65 167.64 90)
 			(effects
 				(font
@@ -8391,6 +8391,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 120.65 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "TFX" ""
 			(at 120.65 167.64 0)
 			(effects
 				(font
@@ -8809,6 +8818,15 @@
 				(hide yes)
 			)
 		)
+		(property "TFX" "TFX-06-204"
+			(at 217.17 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "10"
 			(uuid "f083da3e-4540-4096-9e6d-b64c1d77bc9f")
 		)
@@ -8878,7 +8896,7 @@
 			)
 		)
 		(property "Value" "82"
-			(at 97.79 45.72 0)
+			(at 97.536 51.816 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9029,7 +9047,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "4,7"
 			(at 40.64 107.95 90)
 			(effects
 				(font
@@ -9055,6 +9073,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 40.64 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "TFX" ""
 			(at 40.64 107.95 0)
 			(effects
 				(font
@@ -10519,7 +10546,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "4,7"
 			(at 120.65 123.19 90)
 			(effects
 				(font
@@ -10586,7 +10613,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "4,7"
 			(at 120.65 153.67 90)
 			(effects
 				(font
@@ -10718,7 +10745,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "4,7"
 			(at 120.65 187.96 0)
 			(effects
 				(font

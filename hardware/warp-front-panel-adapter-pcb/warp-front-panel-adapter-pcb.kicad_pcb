@@ -125,7 +125,7 @@
 			(mirror no)
 			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "pcb")
+			(outputdirectory "../../../../Desktop/Gerber-Prototypen/warp-front-panel-adapter-1v0/")
 		)
 	)
 	(net 0 "")
