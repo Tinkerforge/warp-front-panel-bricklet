@@ -189,11 +189,6 @@ void by25q_init(void) {
 
     by25q_init_spi();
 
-    const XMC_GPIO_CONFIG_t input_pin_config = {
-        .mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
-        .input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
-    };
-
     const XMC_GPIO_CONFIG_t pin_config_output_high = {
         .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
         .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
