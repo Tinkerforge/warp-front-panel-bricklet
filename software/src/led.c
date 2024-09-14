@@ -128,6 +128,10 @@ void led_init(void) {
 	XMC_SCU_SetCcuTriggerHigh(SCU_GENERAL_CCUCON_GSC41_Msk);
 
 	memset(&led, 0, sizeof(LED));
+
+	// Use yellow during startup until ESP boots
+	led.pattern = WARP_FRONT_PANEL_LED_PATTERN_ON;
+	led.color   = WARP_FRONT_PANEL_LED_COLOR_YELLOW;
 }
 
 void led_set_color_value(const uint8_t value) {

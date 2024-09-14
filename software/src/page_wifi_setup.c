@@ -87,10 +87,9 @@ void page_wifi_setup_task_draw_qrcode(char *str, uint16_t x_start, uint16_t y_st
 void page_wifi_setup_init(void) {
     memset(&page_wifi_setup, 0, sizeof(PageWifiSetup));
 
-    // TODO: This is testing data, to be removed
-    strcpy(page_wifi_setup.ip_address, "10.0.0.1");
-    strcpy(page_wifi_setup.ssid,       "wem2-Swq");
-    strcpy(page_wifi_setup.password,   "MkoC-UwBq-rm7a-hrgH");
+    strcpy(page_wifi_setup.ip_address, "Unbekannt");
+    strcpy(page_wifi_setup.ssid,       "Unbekannt");
+    strcpy(page_wifi_setup.password,   "Unbekannt");
 }
 
 char* page_wifi_setup_get_qr_string(void) {
