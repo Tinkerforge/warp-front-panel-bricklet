@@ -15,9 +15,9 @@ FONTS = [
 SPRITES = [
     'ICON_SUN',                #  0.png
     'ICON_TYPE2',              #  1.png
-    'ICON_MONEY',              #  2.png
+    'ICON_WALLET',             #  2.png
     'ICON_LOCK_OPEN',          #  3.png
-    'ICON_COG',                #  4.png
+    'ICON_WRENCH',             #  4.png
     'STATUS_ICON_WIFI_3BAR',   #  5.png
     'STATUS_ICON_ETHERNET',    #  6.png
     'STATUS_ICON_WIFI_2BAR',   #  7.png
@@ -37,4 +37,5 @@ SPRITES = [
     'ICON_CLOUD_DRIZZLE',      # 21.png
     'ICON_CLOUD_SUN',          # 22.png
     'ICON_ENERGY',             # 23.png
+    'ICON_WALLET_EURO',        # 24.png
 ]
