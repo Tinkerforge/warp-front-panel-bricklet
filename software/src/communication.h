@@ -88,6 +88,7 @@ void communication_init(void);
 #define FID_GET_LED_STATE 17
 #define FID_SET_DISPLAY 18
 #define FID_GET_DISPLAY 19
+#define FID_GET_FLASH_METADATA 20
 
 
 typedef struct {
@@ -260,6 +261,20 @@ typedef struct {
     uint32_t countdown;
 } __attribute__((__packed__)) GetDisplay_Response;
 
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) GetFlashMetadata;
+
+typedef struct {
+    TFPMessageHeader header;
+    uint32_t version_flash;
+    uint32_t version_expected;
+    uint32_t length_flash;
+    uint32_t length_expected;
+    uint32_t checksum_flash;
+    uint32_t checksum_expected;
+} __attribute__((__packed__)) GetFlashMetadata_Response;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -281,6 +296,7 @@ BootloaderHandleMessageResponse set_led_state(const SetLEDState *data);
 BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDState_Response *response);
 BootloaderHandleMessageResponse set_display(const SetDisplay *data);
 BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_Response *response);
+BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data, GetFlashMetadata_Response *response);
 
 // Callbacks
 

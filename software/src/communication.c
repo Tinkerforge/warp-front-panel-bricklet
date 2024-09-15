@@ -34,6 +34,7 @@
 #include "page_front.h"
 #include "page_wifi_setup.h"
 #include "led.h"
+#include "metadata.h"
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
     const uint8_t length = ((TFPMessageHeader*)message)->length;
@@ -57,6 +58,7 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_GET_LED_STATE:               return length != sizeof(GetLEDState)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_led_state(message, response);
         case FID_SET_DISPLAY:                 return length != sizeof(SetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display(message);
         case FID_GET_DISPLAY:                 return length != sizeof(GetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display(message, response);
+        case FID_GET_FLASH_METADATA:          return length != sizeof(GetFlashMetadata)        ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_flash_metadata(message, response);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -318,6 +320,18 @@ BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_R
             response->countdown = DISPLAY_COUNTDOWN_MS - diff;
         }
     }
+
+    return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data, GetFlashMetadata_Response *response) {
+    response->header.length     = sizeof(GetFlashMetadata_Response);
+    response->length_flash      = by25q.metadata.length;
+    response->length_expected   = METADATA_LENGTH;
+    response->version_flash     = by25q.metadata.version;
+    response->version_expected  = METADATA_VERSION;
+    response->checksum_flash    = by25q.metadata.checksum;
+    response->checksum_expected = METADATA_CHECKSUM;
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

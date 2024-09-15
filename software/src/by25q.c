@@ -165,6 +165,9 @@ void by25q_task_tick(void) {
     by25q_task_read_manufacturer_and_device_id();
     logd("BY25Q Manufacturer ID: %d, Device ID: %d\n\r", by25q.manufacturer_id, by25q.device_id);
 
+    // Read metadata from flash (starts at address 0, max length 256)
+    by25q_task_read((uint8_t*)&by25q.metadata, sizeof(BY25QMetadata), 0);
+
     while(true) {
         if(by25q.to_erase_full) {
             by25q_task_chip_erase();

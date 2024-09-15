@@ -31,6 +31,14 @@
 #define BY25Q_SECTOR_SIZE 4096
 
 typedef struct {
+    uint32_t version;
+    uint32_t length;
+    uint32_t checksum;
+} __attribute__((__packed__)) BY25QMetadata;
+
+typedef struct {
+    BY25QMetadata metadata;
+
     uint32_t page_index;
     uint8_t sub_page_index;
 

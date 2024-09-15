@@ -102,20 +102,22 @@ flash_map_data = bytes(pixel_values_565_8bit) + bytes([0]*(PAGE_LENGTH - (len(pi
 
 # Metadata
 print('Metadata:')
-version  = struct.pack('>I', FLASH_MAP_VERSION)
-length   = struct.pack('>I', len(flash_map_data))
-checksum = struct.pack('<I', binascii.crc32(flash_map_data) & 0xFFFFFFFF) # same checksum as for Bricklet firmwares
+version  = struct.pack('<I', FLASH_MAP_VERSION)
+length   = struct.pack('<I', len(flash_map_data))
+checksum = struct.pack('>I', binascii.crc32(flash_map_data) & 0xFFFFFFFF) # same checksum as for Bricklet firmwares
+
 print(' Version:  {0} (V{1})'.format(version, FLASH_MAP_VERSION))
 print(' Length:   {0} ({1}kB)'.format(length, len(flash_map_data)//1024))
-print(' Checksum: {0}'.format(checksum))
+print(' Checksum: {0} (0x{1})'.format(checksum, checksum[::-1].hex().upper()))
 print('')
 
 # Fill up to be one page of size
 flash_map_metadata = version + length + checksum
 flash_map_metadata += bytes([0]*(METADATA_LENGTH - len(flash_map_metadata)))
 
-metadata_h += '#define METADATA_VERSION  0x{0}\n'.format(version.hex().upper())
-metadata_h += '#define METADATA_CHECKSUM 0x{0}\n'.format(checksum.hex().upper())
+metadata_h += '#define METADATA_VERSION  0x{0}\n'.format(version[::-1].hex().upper())
+metadata_h += '#define METADATA_LENGTH   0x{0}\n'.format(length[::-1].hex().upper())
+metadata_h += '#define METADATA_CHECKSUM 0x{0}\n'.format(checksum[::-1].hex().upper())
 
 with open('flash_map.bin', 'wb') as f:
     f.write(flash_map_metadata + flash_map_data)
