@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thermometer">
+<path d="m23 9.5963c0 6.0219-4.9249 10.904-11 10.904-6.0751 0-11-4.8818-11-10.904 0-1.5055 0.30781-2.9397 0.86444-4.2442 0.27832-0.65225 1.0142-1.8522 1.0142-1.8522l18.243-3e-7s0.73588 1.1999 1.0142 1.8522c0.55663 1.3045 0.86444 2.7387 0.86444 4.2442z" stroke-width="2"/>
+<circle cx="8.75" cy="6.5" r="1.25"/>
+<ellipse cx="8.75" cy="15.5" rx="2.25" ry="2.25"/>
+<ellipse cx="15.25" cy="15.5" rx="2.25" ry="2.25"/>
+<circle cx="18.25" cy="10.5" r="2.25"/>
+<circle cx="12" cy="10.5" r="2.25"/>
+<ellipse cx="5.75" cy="10.5" rx="2.25" ry="2.25"/>
+<circle cx="15.25" cy="6.5" r="1.25"/>
+</svg>

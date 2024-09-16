@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="feather feather-cloud"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="cloud_sun.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="35.591041"
+     inkscape:cx="6.9820941"
+     inkscape:cy="10.648747"
+     inkscape:window-width="2560"
+     inkscape:window-height="1412"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="m 18,13.000019 h -1.26 a 8,8 0 1 0 -7.74,10 h 9 a 5,5 0 0 0 0,-10 z"
+     id="path1" />
+  <path
+     id="circle1"
+     style="stroke-width:2"
+     transform="scale(1,-1)"
+     sodipodi:type="arc"
+     sodipodi:cx="14"
+     sodipodi:cy="-10"
+     sodipodi:rx="4.090909"
+     sodipodi:ry="4.090909"
+     sodipodi:start="5.5869022"
+     sodipodi:end="2.325419"
+     sodipodi:arc-type="arc"
+     d="m 17.138674,-12.623788 a 4.090909,4.090909 0 0 1 -0.331563,5.5996347 4.090909,4.090909 0 0 1 -5.60944,0.0045"
+     sodipodi:open="true" />
+  <line
+     x1="14"
+     y1="1"
+     x2="14"
+     y2="2.6363637"
+     id="line1"
+     style="stroke-width:2" />
+  <line
+     x1="7.6345453"
+     y1="3.6345453"
+     x2="8.7963638"
+     y2="4.7963634"
+     id="line3"
+     style="stroke-width:2" />
+  <line
+     x1="21.363636"
+     y1="10"
+     x2="23"
+     y2="10"
+     id="line6"
+     style="stroke-width:2" />
+  <line
+     x1="19.203636"
+     y1="4.7963634"
+     x2="20.365456"
+     y2="3.6345453"
+     id="line8"
+     style="stroke-width:2" />
+</svg>
