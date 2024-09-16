@@ -38,4 +38,5 @@ SPRITES = [
     'ICON_CLOUD_SUN',          # 22.png
     'ICON_ENERGY',             # 23.png
     'ICON_WALLET_EURO',        # 24.png
+    'ICON_WALLET_DOLLAR',      # 25.png
 ]
