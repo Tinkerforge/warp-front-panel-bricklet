@@ -28,6 +28,7 @@
 #include "bricklib2/os/coop_task.h"
 #include "spi.h"
 
+#include "configs/config_st7789.h"
 #include "st7789.h"
 #include "by25q.h"
 #include "font.h"
@@ -37,6 +38,7 @@
 #include "page_wifi_setup.h"
 #include "status_bar.h"
 #include "communication.h"
+#include "xmc_gpio.h"
 
 Display display;
 
@@ -152,5 +154,15 @@ void display_task_tick(void) {
             page_wifi_setup_task_tick();
             break;
         }
+    }
+
+    if (display.is_active) {
+        // Check that backlight is on if display is active
+        // This turns the backlight on after a reset after the first page is drawn
+        const XMC_GPIO_CONFIG_t pin_config_output_high = {
+            .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+            .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
+        };
+        XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_high);
     }
 }

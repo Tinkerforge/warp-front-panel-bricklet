@@ -158,10 +158,22 @@ void st7789_task_init(void) {
 void st7789_task_display_off(void) {
     st7789_task_write_command(ST7789_CMD_DISPOFF);
     coop_task_sleep_ms(50);
+
+    const XMC_GPIO_CONFIG_t pin_config_output_low = {
+        .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+        .output_level     = XMC_GPIO_OUTPUT_LEVEL_LOW
+    };
+    XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_low);
 }
 
 void st7789_task_display_on(void) {
     st7789_task_write_command(ST7789_CMD_DISPON);
+
+    const XMC_GPIO_CONFIG_t pin_config_output_high = {
+        .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+        .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
+    };
+    XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_high);
 }
 
 void st7789_task_tick(void) {
@@ -195,9 +207,14 @@ void st7789_init(void) {
         .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
     };
 
+    const XMC_GPIO_CONFIG_t pin_config_output_low = {
+        .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+        .output_level     = XMC_GPIO_OUTPUT_LEVEL_LOW
+    };
+
     XMC_GPIO_Init(ST7789_RESET_PIN, &pin_config_output_high);
     XMC_GPIO_Init(ST7789_CD_PIN, &pin_config_output_high);
-    XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_high);
+    XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_low);
     coop_task_init(&st7789_task, st7789_task_tick);
 }
 
