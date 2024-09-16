@@ -159,10 +159,6 @@ void display_task_tick(void) {
     if (display.is_active) {
         // Check that backlight is on if display is active
         // This turns the backlight on after a reset after the first page is drawn
-        const XMC_GPIO_CONFIG_t pin_config_output_high = {
-            .mode             = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
-            .output_level     = XMC_GPIO_OUTPUT_LEVEL_HIGH
-        };
-        XMC_GPIO_Init(ST7789_BACKLIGHT_PIN, &pin_config_output_high);
+        XMC_GPIO_SetOutputHigh(ST7789_BACKLIGHT_PIN);
     }
 }
