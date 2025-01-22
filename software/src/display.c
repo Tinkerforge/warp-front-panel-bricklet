@@ -118,7 +118,8 @@ void display_task_draw_background(void) {
 
 void display_task_tick(void) {
     const uint8_t new_index = button.index % 2;
-    const bool index_changed = new_index != display.last_index;
+    const bool redraw_everything = (new_index != display.last_index) || display.redraw_everything;
+    display.redraw_everything = false;
     display.last_index = new_index;
 
     if(display.active == WARP_FRONT_PANEL_DISPLAY_OFF) {
@@ -128,13 +129,13 @@ void display_task_tick(void) {
         display.countdown = 0;
     }
 
-    if(index_changed) {
+    if(redraw_everything) {
         status_bar.redraw_everything = true;
     }
     switch(new_index) {
         default:
         case 0: {
-            if(index_changed) {
+            if(redraw_everything) {
                 status_bar_set_status("");
                 page_front.redraw_everything = true;
             }
@@ -145,7 +146,7 @@ void display_task_tick(void) {
         }
 
         case 1: {
-            if(index_changed) {
+            if(redraw_everything) {
                 status_bar_set_status("Access Point");
                 page_wifi_setup.redraw_everything = true;
             }

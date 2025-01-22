@@ -89,6 +89,7 @@ void communication_init(void);
 #define FID_SET_DISPLAY 18
 #define FID_GET_DISPLAY 19
 #define FID_GET_FLASH_METADATA 20
+#define FID_REDRAW_EVERYTHING 22
 
 #define FID_CALLBACK_FLASH_DATA_DONE 21
 
@@ -280,6 +281,10 @@ typedef struct {
     TFPMessageHeader header;
 } __attribute__((__packed__)) FlashDataDone_Callback;
 
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) RedrawEverything;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -302,6 +307,7 @@ BootloaderHandleMessageResponse get_led_state(const GetLEDState *data, GetLEDSta
 BootloaderHandleMessageResponse set_display(const SetDisplay *data);
 BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_Response *response);
 BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data, GetFlashMetadata_Response *response);
+BootloaderHandleMessageResponse redraw_everything(const RedrawEverything *data);
 
 // Callbacks
 bool handle_flash_data_done_callback(void);

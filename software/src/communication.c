@@ -59,6 +59,7 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
         case FID_SET_DISPLAY:                 return length != sizeof(SetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_display(message);
         case FID_GET_DISPLAY:                 return length != sizeof(GetDisplay)              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_display(message, response);
         case FID_GET_FLASH_METADATA:          return length != sizeof(GetFlashMetadata)        ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_flash_metadata(message, response);
+        case FID_REDRAW_EVERYTHING:           return length != sizeof(RedrawEverything)        ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : redraw_everything(message);
         default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
     }
 }
@@ -334,6 +335,12 @@ BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data,
     response->checksum_expected = METADATA_CHECKSUM;
 
     return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse redraw_everything(const RedrawEverything *data) {
+    display.redraw_everything = true;
+
+    return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 

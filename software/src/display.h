@@ -41,6 +41,7 @@ typedef struct {
     uint8_t active;
 
     bool is_active;
+    bool redraw_everything;
 } Display;
 
 extern Display display;

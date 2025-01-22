@@ -3,3 +3,4 @@
 
 2025-XX-XX: 2.0.1 (TBD)
 - Add FlashDataDone callback
+- Add RedrawEverything function
