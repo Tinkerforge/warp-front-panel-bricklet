@@ -337,6 +337,31 @@ BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data,
 }
 
 
+bool handle_flash_data_done_callback(void) {
+    static bool is_buffered = false;
+    static FlashDataDone_Callback cb;
+
+    if(!is_buffered) {
+        if(by25q.flash_data_done) {
+            by25q.flash_data_done = false;
+            tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(FlashDataDone_Callback), FID_CALLBACK_FLASH_DATA_DONE);
+        } else {
+            return false;
+        }
+    }
+
+    if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+        bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(FlashDataDone_Callback));
+        is_buffered = false;
+        return true;
+    } else {
+        is_buffered = true;
+    }
+
+    return false;
+}
+
+
 void communication_tick(void) {
     communication_callback_tick();
 }

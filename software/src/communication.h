@@ -1,5 +1,5 @@
 /* warp-front-panel-bricklet
- * Copyright (C) 2024 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2025 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -90,6 +90,7 @@ void communication_init(void);
 #define FID_GET_DISPLAY 19
 #define FID_GET_FLASH_METADATA 20
 
+#define FID_CALLBACK_FLASH_DATA_DONE 21
 
 typedef struct {
     TFPMessageHeader header;
@@ -275,6 +276,10 @@ typedef struct {
     uint32_t checksum_expected;
 } __attribute__((__packed__)) GetFlashMetadata_Response;
 
+typedef struct {
+    TFPMessageHeader header;
+} __attribute__((__packed__)) FlashDataDone_Callback;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_flash_index(const SetFlashIndex *data);
@@ -299,11 +304,12 @@ BootloaderHandleMessageResponse get_display(const GetDisplay *data, GetDisplay_R
 BootloaderHandleMessageResponse get_flash_metadata(const GetFlashMetadata *data, GetFlashMetadata_Response *response);
 
 // Callbacks
-
+bool handle_flash_data_done_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 0
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 1
 #define COMMUNICATION_CALLBACK_LIST_INIT \
+    handle_flash_data_done_callback, \
 
 
 #endif

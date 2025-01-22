@@ -53,6 +53,7 @@ typedef struct {
     uint8_t device_id;
 
     bool rwe_in_progress;
+    bool flash_data_done;
 } BY25Q;
 
 extern BY25Q by25q;

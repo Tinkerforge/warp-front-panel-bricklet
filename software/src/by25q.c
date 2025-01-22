@@ -180,6 +180,7 @@ void by25q_task_tick(void) {
         if(by25q.to_write_index >= 0) {
             by25q_task_write_page(by25q.data_write, by25q.to_write_index*BY25Q_PAGE_SIZE);
             by25q.to_write_index = -1;
+            by25q.flash_data_done = true;
         }
         coop_task_yield();
     }
