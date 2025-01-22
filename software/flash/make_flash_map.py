@@ -98,7 +98,7 @@ while True:
     count += 1
 
 # Make 256 byte aligned (one page)
-flash_map_data = bytes(pixel_values_565_8bit) + bytes([0]*(PAGE_LENGTH - (len(pixel_values_565_8bit) % PAGE_LENGTH)))
+flash_map_data = bytes(pixel_values_565_8bit) + bytes([0xFF] * ((PAGE_LENGTH - (len(pixel_values_565_8bit) % PAGE_LENGTH)) % PAGE_LENGTH))
 
 # Metadata
 print('Metadata:')
@@ -113,7 +113,7 @@ print('')
 
 # Fill up to be one page of size
 flash_map_metadata = version + length + checksum
-flash_map_metadata += bytes([0]*(METADATA_LENGTH - len(flash_map_metadata)))
+flash_map_metadata += bytes([0xFF] * (METADATA_LENGTH - len(flash_map_metadata)))
 
 metadata_h += '#define METADATA_VERSION  0x{0}\n'.format(version[::-1].hex().upper())
 metadata_h += '#define METADATA_LENGTH   0x{0}\n'.format(length[::-1].hex().upper())
