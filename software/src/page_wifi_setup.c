@@ -117,11 +117,12 @@ void page_wifi_setup_task_tick(void) {
     }
 
     if(page_wifi_setup.redraw_background) {
-        display_task_draw_background();
         page_wifi_setup.redraw_background = false;
+        display_task_draw_background();
     }
 
     if(page_wifi_setup.redraw_qrcode) {
+        page_wifi_setup.redraw_qrcode = false;
         display_task_draw_filled_rect(
             ST7789_COLOR_WHITE,
             DISPLAY_END_X - PAGE_WIFI_SETUP_MARGIN_RIGHT - PAGE_WIFI_SETUP_QR_MODULE_SIZE*PAGE_WIFI_SETUP_QR_MODULE_NUM - 2*PAGE_WIFI_SETUP_QR_BORDER_SIZE,
@@ -135,10 +136,10 @@ void page_wifi_setup_task_tick(void) {
             STATUS_BAR_HEIGHT + PAGE_WIFI_SETUP_MARGIN_TOP + PAGE_WIFI_SETUP_QR_BORDER_SIZE,
             PAGE_WIFI_SETUP_QR_MODULE_SIZE
         );
-        page_wifi_setup.redraw_qrcode = false;
     }
 
     if(page_wifi_setup.redraw_ip_address) {
+        page_wifi_setup.redraw_ip_address = false;
         font_task_draw_string(
             PAGE_WIFI_SETUP_IP_ADDRESS_STR,
             strlen(PAGE_WIFI_SETUP_IP_ADDRESS_STR),
@@ -153,10 +154,10 @@ void page_wifi_setup_task_tick(void) {
             PAGE_WIFI_SETUP_MARGIN_LEFT,
             STATUS_BAR_HEIGHT + PAGE_WIFI_SETUP_MARGIN_TOP + PAGE_WIFI_SETUP_FONT1_HEIGHT*1 + PAGE_WIFI_SETUP_FONT2_HEIGHT*0 + PAGE_WIFI_SETUP_TEXT_MARGIN*0
         );
-        page_wifi_setup.redraw_ip_address = false;
     }
 
     if(page_wifi_setup.redraw_ssid) {
+        page_wifi_setup.redraw_ssid = false;
         font_task_draw_string(
             PAGE_WIFI_SETUP_SSID_STR,
             strlen(PAGE_WIFI_SETUP_SSID_STR),
@@ -171,10 +172,10 @@ void page_wifi_setup_task_tick(void) {
             PAGE_WIFI_SETUP_MARGIN_LEFT,
             STATUS_BAR_HEIGHT + PAGE_WIFI_SETUP_MARGIN_TOP + PAGE_WIFI_SETUP_FONT1_HEIGHT*2 + PAGE_WIFI_SETUP_FONT2_HEIGHT*1 + PAGE_WIFI_SETUP_TEXT_MARGIN*1
         );
-        page_wifi_setup.redraw_ssid = false;
     }
 
     if(page_wifi_setup.redraw_password) {
+        page_wifi_setup.redraw_password = false;
         font_task_draw_string(
             PAGE_WIFI_SETUP_PASSWORD_STR,
             strlen(PAGE_WIFI_SETUP_PASSWORD_STR),
@@ -189,6 +190,5 @@ void page_wifi_setup_task_tick(void) {
             PAGE_WIFI_SETUP_MARGIN_LEFT,
             STATUS_BAR_HEIGHT + PAGE_WIFI_SETUP_MARGIN_TOP + PAGE_WIFI_SETUP_FONT1_HEIGHT*3 + PAGE_WIFI_SETUP_FONT2_HEIGHT*2 + PAGE_WIFI_SETUP_TEXT_MARGIN*2
         );
-        page_wifi_setup.redraw_password = false;
     }
 }

@@ -182,8 +182,8 @@ void page_front_task_tick(void) {
     }
 
     if(page_front.redraw_background) {
-        display_task_draw_background();
         page_front.redraw_background = false;
+        display_task_draw_background();
     }
 
     for(uint8_t i = 0; i < 6; i++) {
@@ -197,24 +197,23 @@ void page_front_task_tick(void) {
             page_front_icon_list[i].redraw_everything = false;
         }
         if(page_front_icon_list[i].redraw_sprite && page_front_icon_list[i].active) {
-            sprite_task_draw(page_front_icon_list[i].sprite_index, pfip.icon_x, pfip.icon_y);
             page_front_icon_list[i].redraw_sprite = false;
+            sprite_task_draw(page_front_icon_list[i].sprite_index, pfip.icon_x, pfip.icon_y);
         }
         if(page_front_icon_list[i].redraw_text_1 && page_front_icon_list[i].active) {
-            font_task_draw_string(page_front_icon_list[i].text_1, PAGE_FRONT_TEXT_MAX_CHAR, page_front_icon_list[i].font_index_1, pfip.text1_x, pfip.text1_y);
             page_front_icon_list[i].redraw_text_1 = false;
+            font_task_draw_string(page_front_icon_list[i].text_1, PAGE_FRONT_TEXT_MAX_CHAR, page_front_icon_list[i].font_index_1, pfip.text1_x, pfip.text1_y);
         }
         if(page_front_icon_list[i].redraw_text_2 && page_front_icon_list[i].active) {
-            font_task_draw_string(page_front_icon_list[i].text_2, PAGE_FRONT_TEXT_MAX_CHAR, page_front_icon_list[i].font_index_2, pfip.text2_x, pfip.text2_y);
             page_front_icon_list[i].redraw_text_2 = false;
+            font_task_draw_string(page_front_icon_list[i].text_2, PAGE_FRONT_TEXT_MAX_CHAR, page_front_icon_list[i].font_index_2, pfip.text2_x, pfip.text2_y);
         }
         if(page_front_icon_list[i].redraw_everything && !page_front_icon_list[i].active) {
-            page_front_draw_inactive(i);
-
             page_front_icon_list[i].redraw_sprite = false;
             page_front_icon_list[i].redraw_text_1 = false;
             page_front_icon_list[i].redraw_text_2 = false;
             page_front_icon_list[i].redraw_everything = false;
+            page_front_draw_inactive(i);
         }
     }
 }

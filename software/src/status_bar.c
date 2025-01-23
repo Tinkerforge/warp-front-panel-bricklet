@@ -58,8 +58,8 @@ void status_bar_task_tick(void) {
     }
 
     if(status_bar.redraw_background) {
-        display_task_draw_filled_rect(status_bar.background_color, STATUS_BAR_START_X, STATUS_BAR_START_Y, STATUS_BAR_END_X, STATUS_BAR_END_Y);
         status_bar.redraw_background = false;
+        display_task_draw_filled_rect(status_bar.background_color, STATUS_BAR_START_X, STATUS_BAR_START_Y, STATUS_BAR_END_X, STATUS_BAR_END_Y);
     }
 
     if(status_bar.redraw_wifi) {
@@ -75,21 +75,21 @@ void status_bar_task_tick(void) {
                 icon_wifi = SPRITE_STATUS_ICON_WIFI_1BAR;
             }
         }
-        sprite_task_draw(icon_wifi, STATUS_BAR_ICON_LEFT_MARGIN, STATUS_BAR_START_Y);
         status_bar.redraw_wifi = false;
+        sprite_task_draw(icon_wifi, STATUS_BAR_ICON_LEFT_MARGIN, STATUS_BAR_START_Y);
     }
 
     if(status_bar.redraw_ethernet) {
         // 3 = connected
         const uint8_t icon_ethernet = status_bar.ethernet_status == 3 ? SPRITE_STATUS_ICON_ETHERNET : SPRITE_STATUS_ICON_NO_ETHERNET;
-        sprite_task_draw(icon_ethernet, STATUS_BAR_ICON_LEFT_MARGIN + sprite_list[SPRITE_STATUS_ICON_WIFI_3BAR].width, STATUS_BAR_START_Y);
         status_bar.redraw_ethernet = false;
+        sprite_task_draw(icon_ethernet, STATUS_BAR_ICON_LEFT_MARGIN + sprite_list[SPRITE_STATUS_ICON_WIFI_3BAR].width, STATUS_BAR_START_Y);
     }
 
     if(strlen(status_bar.status) > 0) {
         if(status_bar.redraw_status) {
-            status_bar_task_draw_status_bar_string(status_bar.status);
             status_bar.redraw_status = false;
+            status_bar_task_draw_status_bar_string(status_bar.status);
         }
     } else if(status_bar.redraw_clock) {
         char clock[STATUS_BAR_STATUS_CHARS_MAX] = "        00:00:00";
@@ -100,8 +100,8 @@ void status_bar_task_tick(void) {
         clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 6] += status_bar.seconds / 10;
         clock[STATUS_BAR_STATUS_CHARS_MAX - STATUS_BAR_CLOCK_CHARS + 7] += status_bar.seconds % 10;
 
-        status_bar_task_draw_status_bar_string(clock);
         status_bar.redraw_clock = false;
+        status_bar_task_draw_status_bar_string(clock);
     }
 }
 
