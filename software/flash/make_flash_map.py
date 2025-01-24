@@ -114,9 +114,9 @@ print('')
 flash_map_metadata = version + length + checksum
 flash_map_metadata += bytes([0xFF] * (METADATA_LENGTH - len(flash_map_metadata)))
 
-metadata_h += '#define METADATA_VERSION  0x{0}\n'.format(version[::-1].hex().upper())
-metadata_h += '#define METADATA_LENGTH   0x{0}\n'.format(length[::-1].hex().upper())
-metadata_h += '#define METADATA_CHECKSUM 0x{0}\n'.format(checksum[::-1].hex().upper())
+metadata_h += '#define METADATA_VERSION  0x{0}U\n'.format(version[::-1].hex().upper())
+metadata_h += '#define METADATA_LENGTH   0x{0}U\n'.format(length[::-1].hex().upper())
+metadata_h += '#define METADATA_CHECKSUM 0x{0}U\n'.format(checksum[::-1].hex().upper())
 
 with open('flash_map.bin.xz', 'wb') as f:
     print('Save metadata and data as flash_map.bin.xz')
