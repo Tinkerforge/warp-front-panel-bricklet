@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
 from PIL import Image
-import time
 import defines
 import binascii
+import lzma
 import struct
 
 FLASH_MAP_VERSION = 1
@@ -119,9 +118,10 @@ metadata_h += '#define METADATA_VERSION  0x{0}\n'.format(version[::-1].hex().upp
 metadata_h += '#define METADATA_LENGTH   0x{0}\n'.format(length[::-1].hex().upper())
 metadata_h += '#define METADATA_CHECKSUM 0x{0}\n'.format(checksum[::-1].hex().upper())
 
-with open('flash_map.bin', 'wb') as f:
-    f.write(flash_map_metadata + flash_map_data)
-    print('Save metadata and data as flash_map.bin')
+with open('flash_map.bin.xz', 'wb') as f:
+    print('Save metadata and data as flash_map.bin.xz')
+    lzma_filters = [{"id": lzma.FILTER_LZMA2, "preset": 1 | lzma.PRESET_EXTREME, "dict_size": 512*1024, "lc": 1, "lp": 1, "pb": 1, "nice_len": 273, "mf": lzma.MF_BT4}]
+    f.write(lzma.compress(flash_map_metadata + flash_map_data, check=lzma.CHECK_CRC32, filters=lzma_filters))
 
 def remove_last_comma(s):
     pos = s.rfind(',')
